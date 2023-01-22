@@ -79,4 +79,3 @@ BOOST_AUTO_TEST_CASE_END()
 
 The make target will compile each test module into a single executable and run all test cases simultaneously.
 
-# Testing git with this change
