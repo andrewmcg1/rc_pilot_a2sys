@@ -1,0 +1,218 @@
+{
+	"name": "QUADCOPTER",
+
+	"warnings_en": true,
+
+	"layout": "LAYOUT_4X2",
+	"thrust_map": "AIR2213_3S",
+	"orientation": "ORIENTATION_X_FORWARD",
+	"v_nominal": 16.8,
+
+	"enable_mpu_magnetometer": true,
+
+	"enable_mocap_dropout_emergency_land": true,
+	"mocap_dropout_timeout_ms": 500.0,
+	"dropout_z_throttle": -0.29,
+
+    "hover_throttle": -0.33,
+
+	"rm3100_time_between_meas_s": 0.005,
+
+	"vl53l1x_time_between_meas_s": 0.200,
+	"vl53l1x_timing_budget_ms": 200,
+	
+
+	"apply_rm3100_calibration": false,
+	"rm3100_calibration_filename": "/home/debian/calibration/20220414_outdoorCal.cal",
+	"rm3100_CCR_value": 200,
+	"rm3100_i2c_addr": 2,
+
+	"num_dsm_modes": 2,
+	"flight_mode_1": "AUTONOMOUS",
+	"flight_mode_2": "OPEN_LOOP_DESCENT",
+	"flight_mode_3": "MANUAL",
+
+	"dsm_thr_ch": 1,
+	"dsm_thr_pol": 1,
+	"dsm_roll_ch": 2,
+	"dsm_roll_pol": 1,
+	"dsm_pitch_ch": 3,
+	"dsm_pitch_pol": 1,
+	"dsm_yaw_ch": 4,
+	"dsm_yaw_pol": 1,
+	"dsm_mode_ch": 5,
+	"dsm_mode_pol": 1,
+	"dsm_kill_mode": "DSM_KILL_DEDICATED_SWITCH",
+	"dsm_kill_ch": 6,
+	"dsm_kill_pol": 1,
+
+	"printf_arm": true,
+	"printf_altitude": false,
+	"printf_battery": true,
+	"printf_position": true,
+	"printf_rpy": false,
+	"printf_sticks": true,
+	"printf_setpoint": false,
+	"printf_u": false,
+	"printf_motors": false,
+	"printf_mode": true,
+	"printf_xbee": true,
+	"printf_xbee_velocities": false, 
+	"printf_tracking": true, 
+	"printf_gps": false, 
+	"printf_magnetom": false,
+	"printf_rm3100": true,
+	"printf_vl53l1x": false,
+
+    "enable_logging": true,
+    "log_only_while_armed": false,
+	"log_sensors": true,
+	"log_state": true,
+	"log_xbee": true,
+	"log_gps": true,
+    "log_attitude_setpoint": true,
+    "log_position_setpoint": true,
+	"log_control_u": true,
+	"log_motor_signals": true,
+	"log_throttles": true,
+	"log_dsm": true,
+	"log_flight_mode": true,
+	"log_rm3100": true,
+	"log_benchmark": true,
+    "log_ntp": false,
+    "log_realsense_payload": false,
+	"log_vl53l1x": false,
+
+	"dest_ip": "192.168.8.1",
+	"my_sys_id": 1,
+	"mav_port": 14551,
+
+	"dsm_timeout_ms": 500,
+
+	"enable_wp_linear_interpolation": true,
+	"wp_folder": "/home/debian/waypoints/20220901_researchData/lowGrad_z_Stride_slow/",
+	"wp_takeoff_filename": "takeoff_waypoints.cfg",
+	"wp_guided_filename": "guided_waypoints.cfg",
+	"wp_landing_filename": "landing_waypoints.cfg",
+
+    "xbee_serial_port": "/dev/ttyS5",
+    "xbee_packet_version": 1,
+    
+    "realsense_payload_serial_port": "/dev/ttyS1",
+
+	"gyro_lpf_timeConst_multiplier": 3.0,
+
+    "roll_rate_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp":0.1,
+		"kd":0.00,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "roll_rate_controller_i": {
+		"TF_or_PID": "I",
+		"ki":0.02,
+        "imax": 0.05
+	},
+
+
+    "pitch_rate_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp":0.1,
+		"kd":0.00,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "pitch_rate_controller_i": {
+		"TF_or_PID": "I",
+		"ki":0.02,
+        "imax": 0.05
+	},
+
+
+    "yaw_rate_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp":1.0,
+		"kd":0.00,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "yaw_rate_controller_i": {
+		"TF_or_PID": "I",
+		"ki":0.02,
+        "imax": 0.05
+	},
+
+
+	"roll_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp": 8.0,
+		"kd": 0.0,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+	"roll_controller_i": {
+		"TF_or_PID": "I",
+		"ki":0.0,
+        "imax": 0.05
+	},
+
+    
+	"pitch_controller": {
+		"TF_or_PID": "P",
+		"kp": 8.0
+	},
+
+
+	"yaw_controller": {
+		"TF_or_PID": "P",
+		"kp": 4.0
+	},
+
+
+    "altitude_rate_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp":0.15,
+		"kd":0.03,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "altitude_rate_controller_i": {
+		"TF_or_PID": "I",
+		"ki":0.05,
+        "imax": 0.1
+	},
+
+
+	"altitude_controller_pd": {
+		"TF_or_PID": "PD",
+		"kp":5.0,
+        "kd":0.02,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "altitude_controller_i": {
+		"TF_or_PID": "I",
+		"ki": 0.15,
+        "imax": 0.1
+	},
+
+
+	"horiz_vel_ctrl_pd": {
+		"TF_or_PID": "PD",
+		"kp":2,
+		"kd":0.1,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+    "horiz_vel_ctrl_i": {
+		"TF_or_PID": "I",
+		"ki":0.02,
+		"imax":0.05
+	},
+
+	"horiz_pos_ctrl_pd": {
+		"TF_or_PID": "PD",
+		"kp": 2.0,
+		"kd": 0.05,
+		"crossover_freq_rad_per_sec": 62.83
+	},
+	"horiz_pos_ctrl_i": {
+		"TF_or_PID": "I",
+		"ki": 0.2,
+		"imax": 0.3
+	}
+}

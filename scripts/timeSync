@@ -1,0 +1,63 @@
+#!/bin/bash
+
+main() {
+	# Array of arguments
+	args=("$@")
+
+	# Define Destination (DEST)
+	if [ $# -gt 1 ] && [ $# -lt 4 ]
+	then
+		if [ $1 = usb ]; then
+			#USB IP address is different for windows
+			if [ $# -gt 1 ]; then
+				if [ $2 == windows ]; then
+					DEST=debian@192.168.7.2
+				elif [ $2 == linux ]; then
+					DEST=debian@192.168.6.2
+				else
+					usage_error
+				fi
+			fi
+		elif [ $1 = wifi ]; then
+			DEST=debian@192.168.8.1
+		elif [ $1 = a2sys ]; then
+			DEST=debian@192.168.1.101
+		elif [ $1 = ip ]; then
+			DEST="debian@$2"
+		else
+			usage_error
+		fi
+	else
+		usage_error
+	fi
+
+	echo "Synchronizing Time with $DEST"
+
+	# Set the date on the beaglebone to mach source computer, eliminates clock skew on make
+    DATE=$(date)
+    # SET_DATE="echo 'i<3robots!' | sudo -S date -s ""'""$DATE""'"
+    SET_DATE="sudo -S date -s ""'""$DATE""'"
+    ssh -t $DEST $SET_DATE
+}
+
+function usage_error() {
+	echo "---------- HOW TO USE THIS SCRIPT ----------"
+	echo "Usage: ./timeSync [usb|wifi|a2sys|ip] [linux|windows|<ip_address>]"
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 1: ./timeSync usb windows"
+	echo "          will synchronize time with a BeagleBone over USB if the computer is running Windows"
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 2: ./timeSync wifi linux"
+	echo "          will synchronize time with a BeagleBone over wifi if the computer is running Linux and connected to BeagleBone's Wifi."
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 4: ./timeSync ip <ip_address>"
+	echo "          will synchronize time with a BeagleBone the specified IP Address."
+	echo ""
+
+	exit 1
+}
+
+main "$@"
