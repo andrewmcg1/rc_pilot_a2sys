@@ -35,6 +35,7 @@ main() {
 
 	# Get the directory of this script
 	SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+	cd "$( dirname "$SCRIPT_DIR")"
 	RC_PILOT_DIR=$SCRIPT_DIR/..
 
 	# Define the directory on the BeagleBone where 'rc_pilot_a2sys' will be transfered to
