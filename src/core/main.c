@@ -317,7 +317,7 @@ int main(int argc, char* argv[])
     {
         FAIL("ERROR: must calibrate accelerometer with rc_calibrate_accel first\n")
     }
-    if (settings.enable_mpu_magnetometer && !rc_mpu_is_gyro_calibrated())
+    if (settings.enable_mpu_magnetometer && !rc_mpu_is_mag_calibrated())
     {
         FAIL("ERROR: must calibrate magnetometer with rc_calibrate_mag first\n")
     }
