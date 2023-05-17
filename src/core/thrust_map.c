@@ -66,6 +66,17 @@ static double air2213_3s_map[][2] = {{0.000, 0.0}, {0.127, 0.022556517697878},
     {0.785, 4.3262274318871}, {0.827, 4.76347857182283}, {0.868, 5.1475601251139},
     {0.909, 5.67761582028645}, {1.000, 5.68764923230496}};
 
+/*
+ * Emax ECO II 2307 1700kv motor, 4s lipo, 8x4.5 MR prop
+ * Diatone Mamba F55 
+ * BLHeli ESC *insert timing*
+ */
+static const int eco2807_4s_points = 21;
+static double eco2807_4s_map[][2] = {{0.00, 0.0000}, {0.05, 0.0500}, {0.1, 0.1000}, {0.15, 0.1500}, 
+    {0.2, 0.2000}, {0.25, 0.2500}, {0.3, 0.3000}, {0.35, 0.3500}, {0.4, 0.4000}, {0.45, 0.4500}, 
+    {0.5, 0.5000}, {0.55, 0.5500}, {0.6, 0.6000}, {0.65, 0.6500}, {0.7, 0.7000}, {0.75, 0.7500}, 
+    {0.8, 0.8000}, {0.85, 0.8500}, {0.9, 0.9000}, {0.95, 0.9500}, {1.0, 1.0000}};
+
 int thrust_map_init(thrust_map_t map)
 {
     int i;
@@ -93,6 +104,10 @@ int thrust_map_init(thrust_map_t map)
         case AIR2213_3S:
             points = air2213_3s_points;
             data = air2213_3s_map;
+            break;
+        case ECO2807_4S:
+            points = eco2807_4s_points;
+            data = eco2807_4s_map;
             break;
         default:
             fprintf(stderr, "ERROR: unknown thrust map\n");

@@ -43,7 +43,7 @@ main() {
 	TMP_FILE=/tmp/include_files
 
 	# Folders and files to transfer to the beaglebone
-	INCLUDE_FILES='include/ src/ Makefile settings/'
+	INCLUDE_FILES='include/ src/ Makefile settings/ tests/'
 
 	# Populates tmp_file with all of the files to send to the beaglebone
 	# (needed by the --include-from rsync flag)
