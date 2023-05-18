@@ -164,7 +164,7 @@ int feedback_march(void)
         rc_saturate_double(&fstate.m[i], 0.0, 1.0);
 
         // finally send pulses!
-        rc_servo_send_esc_pulse_normalized(i + 1, fstate.m[i]);
+        rc_servo_send_esc_pulse_normalized(i + 1, fstate.m[i] * settings.output_modifier);
     }
 
     /***************************************************************************

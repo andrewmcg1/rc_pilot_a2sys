@@ -56,6 +56,7 @@ typedef struct settings_t
     double dropout_z_throttle;
 
     double hover_throttle;
+    double output_modifier;
 
     // Amount of time (in seconds) between each RM3100 read
     double rm3100_time_between_meas_s;

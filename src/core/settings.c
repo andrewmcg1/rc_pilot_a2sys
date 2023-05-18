@@ -244,6 +244,10 @@ static int __parse_thrust_map(void)
     {
         settings.thrust_map = AIR2213_3S;
     }
+    else if (strcmp(tmp_str, "ECO2807_4S") == 0)
+    {
+        settings.thrust_map = ECO2807_4S;
+    }
     else
     {
         fprintf(stderr, "ERROR: invalid thrust_map string\n");
@@ -693,6 +697,8 @@ int settings_load_from_file(const char* path)
 
     // Hover Throttle
     PARSE_DOUBLE_MIN_MAX(hover_throttle, -1, 0)
+    // Output Modifier
+    PARSE_DOUBLE_MIN_MAX(output_modifier, 0, 1)
 
     // Amount of time (in seconds) between each RM3100 measurements
     PARSE_DOUBLE_MIN_MAX(rm3100_time_between_meas_s, 0, 1000)

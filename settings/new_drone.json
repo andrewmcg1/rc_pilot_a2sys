@@ -15,6 +15,7 @@
 	"dropout_z_throttle": -0.30,
 
     "hover_throttle": -0.33,
+	"output_modifier": 0.7,
 
 	"rm3100_time_between_meas_s": 0.005,
 	
