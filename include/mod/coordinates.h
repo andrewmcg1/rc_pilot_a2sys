@@ -76,6 +76,8 @@ int coordinates_init();
 /**
  * @brief   Converts lla coordinates to ned (relative to origin)
  *
+ * Usage: naza_gps.c, line 201
+ *
  * @param[in]   lla     lat,long,alt coordinates to be converted
  *
  * @return  ned waypoint coresponding to the lla coordinates
@@ -85,6 +87,10 @@ ned_waypoint_t lla2ned(const lla_t* lla);
 /**
  * @brief   Converts lla coordinates to ecef (relative to origin)
  *
+ * Usage: coordinates.c, line 15
+ *        coordinated.c, line 25
+ *        coordinates.c, line 58
+ *
  * @param[in]   lla     lat,long,alt coordinates to be converted
  *
  * @return  ecef waypoint coresponding to the lla coordinates
@@ -93,6 +99,8 @@ ecef_waypoint_t lla2ecef(const lla_t* lla);
 
 /**
  * @brief   Sets origin to ```origin_lla```
+ *
+ * Usage: naza_gps.c, line 70
  *
  * @param[in]   origin_lla  lla coordinates to be set as origin
  */

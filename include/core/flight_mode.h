@@ -99,8 +99,12 @@ typedef enum flight_mode_t
     TEST_BENCH_DIRECT_Z_VEL
 } flight_mode_t;
 
-/** This function is balically a list of the enums in 'flight_mode_t'
- * that require Motion Capture (MOCAP) to function properly. 
+/** This function is basically a list of the enums in 'flight_mode_t'
+ * that require Motion Capture (MOCAP) to function properly.
+ *
+ * Usage: controller.c, line 170
+ *        input_manager.c, line 189
+ *
  * @param flight_mode_t
  */
 bool mode_needs_mocap(flight_mode_t mode);

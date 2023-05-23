@@ -29,6 +29,8 @@ typedef enum thrust_map_t
 /**
  * @brief      Check the thrust map for validity and populate data arrays.
  *
+ * Usage: main.c, line 340
+ *
  * @return     0 on success, -1 on failure
  */
 int thrust_map_init(thrust_map_t map);
@@ -36,6 +38,7 @@ int thrust_map_init(thrust_map_t map);
 /**
  * @brief      Corrects the motor signal m for non-linear thrust curve in place.
  *
+ * Usage: feedback.c, line 160
  *
  * @param[in]  m     thrust input, must be between 0 and 1 inclusive
  *

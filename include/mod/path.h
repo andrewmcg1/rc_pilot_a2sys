@@ -1,5 +1,5 @@
 /**
- * <waypoints.h>
+ * <path.h>
  *
  * @brief   Functions to read the waypoint file and handle the path
  *
@@ -20,7 +20,7 @@
  *
  * @author Glen Haggin (ghaggin@umich.edu)
  *
- * @addtogroup Waypoints
+ * @addtogroup Path
  * @{
  */
 
@@ -43,6 +43,8 @@
  * i.e. not in the form <x y z xd yd zd t> (all floats), then the intialization fails and the
  * path stays unitialized.
  *
+ * Usage: setpoint_manager.c, line 204
+ *
  * @param[in]   file_path   string containing the relative path to the waypoint file
  *
  * @return      0 on success, -1 on failure
@@ -51,6 +53,12 @@ int path_load_from_file(const char* file_path);
 
 /**
  * @brief       Frees memory allocated in path and "unitializes" path variable
+ *
+ * Usage: path.c, line 39
+ *        path.c, line 65
+ *        path.c, line 162
+ *        path.c, line 255
+ *        main.c, line 657
  */
 void path_cleanup();
 

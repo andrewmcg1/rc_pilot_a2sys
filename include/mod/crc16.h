@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <string.h>
 
+
+/**
+ * Usage: realsense_payload_recieve.c, line 85
+ *        xbee_recieve.c, line 191
+*/
 inline uint16_t fletcher16(unsigned char* buf, size_t buflen)
 {
     // printf("Computing Checksum with function!\n");

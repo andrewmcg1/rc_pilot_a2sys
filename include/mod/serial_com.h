@@ -24,12 +24,18 @@ extern "C"
  * (no flow control, no fancy character handling. Configures
  * it for blocking reads.  8 data bits, 1 stop bit, no parity.
  *
+ * Usage: realsense_payload_recieve.c, line 29
+ *        naza_gps.c, line 44
+ *        xbee_recieve.c, line 57
+ *
  * @return      the fd or -1 on error
  */
 int serial_open(const char *port, int baud, int blocking);
 
 /** @brief   Set the baud rate, where the baudrate is just the integer value
  *  desired.
+ *
+ * Usage: 
  *
  * @return      non-zero on error.
  */
