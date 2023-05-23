@@ -10,7 +10,7 @@
  * @date       02/23/2020 (MM/DD/YYYY)
  * 
  * 
- * @addtogroup  BENCHMARK
+ * @addtogroup  Benchmark
  * @{
  */
 

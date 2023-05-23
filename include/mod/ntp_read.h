@@ -11,7 +11,7 @@
  * @date       05/21/2020 (MM/DD/YYYY)
  * 
  * 
- * @addtogroup  NTP_READ
+ * @addtogroup  NTP_Read
  * @{
  */
 

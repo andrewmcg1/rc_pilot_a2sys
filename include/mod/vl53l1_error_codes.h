@@ -83,7 +83,7 @@ extern "C" {
  * PRIVATE define do not edit
  ****************************************/
 
-/** @defgroup VL53L1_define_Error_group Error and Warning code returned by API
+/** @brief VL53L1_define_Error_group Error and Warning code returned by API
  *  The following DEFINE are used to identify the PAL ERROR
  *  @{
  */
