@@ -2,15 +2,15 @@
 
 main(){
 	# Parse input to determine the destination IP
-	if [ $# -gt 0 ] && [ $# -lt 3 ]
+	if [ $# -gt 1 ] && [ $# -lt 4 ]
 	then
 		if [ $1 = usb ]; then
-			DEST=debian@192.168.6.2
-
 			#USB IP address is different for windows
 			if [ $# -gt 1 ]; then
-				if [ $2 = windows ]; then
+				if [ $2 == windows ]; then
 					DEST=debian@192.168.7.2
+				elif [ $2 == linux ]; then
+					DEST=debian@192.168.6.2
 				else
 					usage_error
 				fi
@@ -19,6 +19,8 @@ main(){
 			DEST=debian@192.168.8.1
 		elif [ $1 = a2sys ]; then
 			DEST=debian@192.168.1.101
+		elif [ $1 = ip ]; then
+			DEST="debian@$2"
 		else
 			usage_error
 		fi
@@ -27,16 +29,17 @@ main(){
 	fi
 
 	SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+	cd "$( dirname "$SCRIPT_DIR")"
 	LOG_FILE=$SCRIPT_DIR/../../flight_logs/flight_logs_$(date +%F_%H%M%S)
 
 	mkdir -p $LOG_FILE 
 
-	rsync -avzh --progress $LOC:/home/debian/rc_pilot_logs/ $LOG_FILE 
+	rsync -avzh --progress $DEST:/home/debian/rc_pilot_logs/ $LOG_FILE 
 }
 
 usage_error(){
 	echo "ERROR: Please specify beaglebone connection"
-	echo "Usage: ./transfer_rcpilot [usb|wifi|a2sys] [ |windows]"
+	echo "Usage: ./copy_logs [usb|wifi|a2sys] [linux|windows|<ip_address>]"
 	exit 1
 }
 

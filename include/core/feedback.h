@@ -21,7 +21,7 @@
 #include <stdint.h>  // for uint64_t
 
 /**
- * @brief   State of the feedback loop
+ * @brief   Condition of each of the feedback loop's states
  *
  * Reported by the feedback controller. Should only be written to by the
  * feedback controller after initialization.

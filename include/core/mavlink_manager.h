@@ -2,6 +2,8 @@
  * <mavlink_manager.h>
  *
  * @brief   Functions to start and stop the mavlink manager
+ * 
+ *  Mavlink is the motion capture system that is used for rc_pilot
  *
  * @addtogroup MavlinkManager
  * @{
@@ -18,7 +20,7 @@
 int mavlink_manager_init(void);
 
 /**
- * @brief   stops the mavlink manager
+ * @brief   stops the mavlink manager and frees used memory
  *
  * @return  0 if thread exited cleanly, -1 if exit timed out.
  */

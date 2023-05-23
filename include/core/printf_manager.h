@@ -32,7 +32,7 @@ int printf_cleanup(void);
  * @brief   Only used by printf_manager right now, but could be useful
  * elsewhere.
  *
- * @param[in]  mode  The mode
+ * @param[in]  mode  The flight mode
  *
  * @return     0 on success or -1 on error
  */
