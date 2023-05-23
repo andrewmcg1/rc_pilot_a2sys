@@ -102,7 +102,7 @@ static int __print_header()
     }
     if (settings.printf_gps)
     {
-        printf("%sgps_lat|gps_lon|gps_ele|", __next_colour());
+        printf("%sgps_lat|gps_lon|gps_ele|gps_fix|", __next_colour());
     }
     if (settings.printf_rm3100)
     {
@@ -227,8 +227,8 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_gps)
         {
-            printf("%s%+7.2f|%+7.2f|%+7.2f|", __next_colour(), 
-                gps_data.lla.lat, gps_data.lla.lon, gps_data.lla.alt);
+            printf("%s%+7.2f|%+7.2f|%+7.2f|%+7.2d|", __next_colour(), 
+                gps_data.lla.lat, gps_data.lla.lon, gps_data.lla.alt, gps_data.fix);
         }
         if (settings.printf_rm3100)
         {

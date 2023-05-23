@@ -20,15 +20,15 @@
 #include <rc_pilot_defs.h>
 #include <stdint.h>  // for uint64_t
 
-/**
- * @brief   State of the feedback loop
- *
- * Reported by the feedback controller. Should only be written to by the
- * feedback controller after initialization.
- * This is the state of the feedback loop. contains most recent values
- */
-typedef struct feedback_state_t
-{
+ /**
+  * @brief   State of the feedback loop
+  *
+  * Reported by the feedback controller. Should only be written to by the
+  * feedback controller after initialization.
+  * This is the state of the feedback loop. contains most recent values
+  *
+  */
+typedef struct feedback_state_t {
     int initialized;          ///< set to 1 after feedback_init(void)
     arm_state_t arm_state;    ///< actual arm state as reported by feedback controller
     fail_state_t fail_state;  ///< fail state as reported by the feedback controller
@@ -46,6 +46,8 @@ extern feedback_state_t fstate;
  * @brief   Initial setup of all feedback controllers. Should only be called
  * once on program start.
  *
+ * Usage: main.c, line 570
+ *
  * @return  0 on success, -1 on failure
  */
 int feedback_init(void);
@@ -55,6 +57,8 @@ int feedback_init(void);
  *
  * This is called AFTER state_estimator_march and actually sends signals to the
  * motors. This is safely callable when Disarmed.
+ *
+ * Usage: main.c, line 197
  *
  * @return  0 on success, -1 on failure
  */
@@ -69,6 +73,12 @@ int feedback_march(void);
  * the next loop after disarming to maintain timing of pulses to the
  * motors
  *
+ * Usage: feedback.c, line 101
+ *        feedback.c, line 117
+ *        feedback.c, line 123
+ *        setpoint_manager.c, line 173
+ *        main.c, line 603
+ *
  * @return  0 on success, -1 on failure
  */
 int feedback_disarm(void);
@@ -76,12 +86,16 @@ int feedback_disarm(void);
 /**
  * @brief   This is how outside functions should start the flight controller.
  *
+ * Usage: setpoint_manager.c, line 179
+ *
  * @return  0 on success, -1 on failure
  */
 int feedback_arm(void);
 
 /**
  * @brief   Cleanup the feedback controller, freeing memory
+ *
+ * Usage: main.c, line 652
  *
  * @return  0 on success, -1 on failure
  */

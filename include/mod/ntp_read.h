@@ -38,6 +38,12 @@ extern ntp_struct ntp_data;
 
 int ntp_offset_init();
 int ntp_offset_cleanup();
+
+/**
+ * Usage: ntp_read.c, line, 39
+ *        main.c, line 547
+ *        main.c, line 634
+*/
 double get_ntp_offset();
 
 

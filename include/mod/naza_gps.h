@@ -64,6 +64,8 @@ extern gps_data_t gps_data;
  *
  * The serial port is defined in the code to be the GPS (uart2) port on the beaglebone
  *
+ * Usage: main.c, line 431
+ *
  * @return  0 on success, -1 on failure (not good at detecting failure)
  */
 int gps_init();
@@ -73,6 +75,8 @@ int gps_init();
  *
  * Function attempts to read one byte at a time from the naza gps unit
  * until all bytes are read.  The data is parsed one byte at a time.
+ *
+ * Usage: main.c, line 155
  *
  * @return  0 on success, -1 on failure
  */
