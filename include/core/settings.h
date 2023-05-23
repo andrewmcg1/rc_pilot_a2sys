@@ -214,12 +214,16 @@ extern settings_t settings;
 /**
  * @brief   Populates the settings and controller structs with the settings file.
  *
+ * Usage: main.c, line 287
+ *
  * @return  0 on success, -1 on failure
  */
 int settings_load_from_file(const char* path);
 
 /**
  * @brief   Only used in debug mode. Prints settings to console
+ *
+ * Usage: settings.c, line 654
  *
  * @return  0 on success, -1 on failure
  */

@@ -1,5 +1,5 @@
 /**
- * @file waypoint.c
+ * @file path.c
  **/
 
 #include <fcntl.h>  // for F_OK

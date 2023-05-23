@@ -18,21 +18,20 @@
 #include <rc_pilot_defs.h>
 #include <stdint.h>  // for uint64_t
 
-/**
- * This is the output from the state estimator. It contains raw sensor values
- * and the outputs of filters. Everything is in NED coordinates defined as:
- *
- * - X pointing Forward
- * - Y pointing Right
- * - Z pointing Down
- *
- * right hand rule applies for angular values such as tait bryan angles and gyro
- * - Positive Roll to the right about X
- * - Positive Pitch back about Y
- * - Positive Yaw right about Z
- */
-typedef struct state_estimate_t
-{
+ /**
+  * This is the output from the state estimator. It contains raw sensor values
+  * and the outputs of filters. Everything is in NED coordinates defined as:
+  *
+  * - X pointing Forward
+  * - Y pointing Right
+  * - Z pointing Down
+  *
+  * right hand rule applies for angular values such as tait bryan angles and gyro
+  * - Positive Roll to the right about X
+  * - Positive Pitch back about Y
+  * - Positive Yaw right about Z
+  */
+typedef struct state_estimate_t {
     int initialized;
     uint64_t imu_time_ns;
     uint64_t bmp_time_ns;
@@ -47,7 +46,7 @@ typedef struct state_estimate_t
      * unbounded and keeps track of multiple rotations. This provides a continuously
      * differentiable variable with no jumps between +-pi
      */
-    ///@{
+     ///@{
     double gyro[3];               ///< gyro roll pitch yaw (rad/s)
     double accel[3];              ///< raw accel XYZ NED coordinates (m/s^2)
     double quat_imu[4];           ///< DMP normalized quaternion
@@ -60,7 +59,7 @@ typedef struct state_estimate_t
      * these values are only set when magnetometer is enabled in settings.
      * right now these aren't used and we don't suggest turning the magnetometer on
      */
-    ///@{
+     ///@{
     double mag[3];           ///< magnetometer XYZ NED coordinates ()
     double mag_heading_raw;  ///< raw compass heading
     double mag_heading;      ///< compass heading filtered with IMU
@@ -73,7 +72,7 @@ typedef struct state_estimate_t
      * these are copoies of other values in this state estimate used for feedback
      * this is done so we can easily chose which source to get feedback from (mag or no mag)
      */
-    ///@{
+     ///@{
     double roll;
     double pitch;
     double yaw;
@@ -96,7 +95,7 @@ typedef struct state_estimate_t
      * Note this is altitude so positive is upwards unlike the NED
      * coordinate frame that has Z pointing down.
      */
-    ///@{
+     ///@{
     double bmp_pressure_raw;  ///< raw barometer pressure in Pascals
     double alt_bmp_raw;       ///< altitude estimate using only bmp from sea level (m)
     double alt_bmp;           ///< altitude estimate using kalman filter (IMU & bmp)
@@ -108,7 +107,7 @@ typedef struct state_estimate_t
      * As mocap drop in and out the mocap_running flag will turn on and off.
      * Old values will remain readable after mocap drops out.
      */
-    ///@{
+     ///@{
     int mocap_running;            ///< 1 if motion capture data is recent and valid
     uint64_t mocap_timestamp_ns;  ///< timestamp of last received packet in nanoseconds since boot
     uint64_t xbee_time_received_ns;  ///< timestamp of xbee message received
@@ -116,20 +115,20 @@ typedef struct state_estimate_t
     double quat_mocap[4];            ///< UAV orientation according to mocap
     double tb_mocap[3];              ///< Tait-Bryan angles according to mocap
     int is_active;                   ///< TODO used by mavlink manager, purpose unclear... (pg)
-                                     ///@}
+    ///@}
 
-    /** @name Global Position Estimate
-     * This is the global estimated position, velocity, and acceleration
-     * output of a kalman filter which filters accelerometer, DMP attitude,
-     * and mocap data. If mocap is not available, barometer will be used.
-     *
-     * global values are in the mocap's frame for position control.
-     * relative values are in a frame who's origin is at the position where
-     * the feedback controller is armed. Without mocap data the filter will
-     * assume altitude from the barometer and accelerometer, and position
-     * estimate will have steady state gain of zero to prevent runaway.
-     */
-    ///@{
+/** @name Global Position Estimate
+ * This is the global estimated position, velocity, and acceleration
+ * output of a kalman filter which filters accelerometer, DMP attitude,
+ * and mocap data. If mocap is not available, barometer will be used.
+ *
+ * global values are in the mocap's frame for position control.
+ * relative values are in a frame who's origin is at the position where
+ * the feedback controller is armed. Without mocap data the filter will
+ * assume altitude from the barometer and accelerometer, and position
+ * estimate will have steady state gain of zero to prevent runaway.
+ */
+ ///@{
     double pos_global[3];
     double vel_global[3];
     double accel_global[3];
@@ -155,6 +154,8 @@ extern rc_mpu_data_t mpu_data;
  *
  * barometer must be initialized first
  *
+ * Usage: main.c, line 411
+ *
  * @return     0 on success, -1 on failure
  */
 int state_estimator_init(void);
@@ -164,6 +165,8 @@ int state_estimator_init(void);
  *
  * Called immediately before feedback_march
  *
+ * Usage: main.c, line 189
+ *
  * @return     0 on success, -1 on failure
  */
 int state_estimator_march(void);
@@ -172,6 +175,8 @@ int state_estimator_march(void);
  * @brief      jobs the state estimator must do after feedback_controller
  *
  * Called immediately after feedback_march in the ISR. Currently this reads
+ *
+ * Usgae: main.c, line 205
  *
  * @return     0 on success, -1 on failure
  */

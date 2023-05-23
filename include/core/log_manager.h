@@ -217,6 +217,9 @@ typedef struct log_entry_t
 /**
  * @brief   creates a new csv log file and starts the background thread.
  *
+ * Usage: feedback.c, line 77
+ *        main.c, line 395
+ *
  * @return  0 on success, -1 on failure
  */
 int log_manager_init(void);

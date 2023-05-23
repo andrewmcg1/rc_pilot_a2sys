@@ -47,6 +47,8 @@ typedef enum rotor_layout_t
  * mixing_matrix.c below to interface with it. Used in
  * mixing_matrix.c
  *
+ * Usage: main.c, line 345
+ *
  * @param[in]   layout  The layout enum
  *
  * @return  0 on success, -1 on failure
@@ -83,6 +85,13 @@ int mix_all_controls(double u[6], double* mot);
  * array of current motor outputs that the new channel ch will be
  * adding onto.
  *
+ * Usage: controller.c, line 460
+ *        controller.c, line 468
+ *        controller.c, line 476
+ *        controller.c, line 484
+ *        controller.c, line 495
+ *        controller.c, line 503
+ *
  * @param[in]   ch    channel
  * @param[in]   mot   The array of motor signals to be added onto
  * @param[out]  min   The minimum possible input without saturation
@@ -102,9 +111,17 @@ int mix_check_saturation(int ch, double* mot, double* min, double* max);
  * validity with check_channel_saturation() first. Used in
  * mixing_matrix.c
  *
+ * Usage: controller.c, line 457
+ *        controller.c, line 465
+ *        controller.c, line 473
+ *        controller.c, line 480
+ *        controller.c, line 489
+ *        controller.c, line 500
+ *        controller.c, line 508
+ *
  * @param[in]  u     control input
  * @param[in]  ch    channel
- * @param      mot   array of motor channels
+ * @param[out]      mot   array of motor channels
  *
  * @return  0 on success, -1 on failure
  */

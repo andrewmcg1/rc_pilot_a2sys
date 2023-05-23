@@ -12,11 +12,11 @@
 #ifndef __MAVLINK_MANAGER__
 #define __MAVLINK_MANAGER__
 
-/**
- * @brief   Starts the mavlink manager
- *
- * @return  0 on success, -1 on failure
- */
+ /**
+  * @brief   Starts the mavlink manager
+  *
+  * @return  0 on success, -1 on failure
+  */
 int mavlink_manager_init(void);
 
 /**

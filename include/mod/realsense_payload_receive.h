@@ -53,12 +53,16 @@ extern int realsense_portID;
 /**
  * @brief       RealSense Payload initialization function
  *
+ * Usage: main.c, line 425
+ *
  * @return      0 on success, -1 on failure
  */
 int REALSENSE_init(const char *realsense_port);
 
 /**
  * @brief       Read message recieved from RealSense Payload
+ *
+ * Usage: main.c, line 135
  *
  * @return      0 on no new data, msgID on new data, -1 on failure
  */
