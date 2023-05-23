@@ -20,15 +20,15 @@
 #include <rc_pilot_defs.h>
 #include <stdint.h>  // for uint64_t
 
- /**
-  * @brief   State of the feedback loop
-  *
-  * Reported by the feedback controller. Should only be written to by the
-  * feedback controller after initialization.
-  * This is the state of the feedback loop. contains most recent values
-  *
-  */
-typedef struct feedback_state_t {
+/**
+ * @brief   Condition of each of the feedback loop's states
+ *
+ * Reported by the feedback controller. Should only be written to by the
+ * feedback controller after initialization.
+ * This is the state of the feedback loop. contains most recent values
+ */
+typedef struct feedback_state_t
+{
     int initialized;          ///< set to 1 after feedback_init(void)
     arm_state_t arm_state;    ///< actual arm state as reported by feedback controller
     fail_state_t fail_state;  ///< fail state as reported by the feedback controller

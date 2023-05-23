@@ -38,7 +38,7 @@ int printf_cleanup(void);
  *
  * Usage: printf_manager.c, line 273
  *
- * @param[in]  mode  The mode
+ * @param[in]  mode  The flight mode
  *
  * @return     0 on success or -1 on error
  */
