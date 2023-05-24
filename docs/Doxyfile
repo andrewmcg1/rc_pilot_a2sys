@@ -1206,7 +1206,9 @@ HTML_EXTRA_STYLESHEET  = src/doxygen-awesome.css \
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = src/doxygen-awesome-darkmode-toggle.js
+HTML_EXTRA_FILES       = src/doxygen-awesome-darkmode-toggle.js \
+                        src/doxygen-awesome-paragraph-link.js \
+                        src/doxygen-awesome-interactive-toc.js
 
 HTML_COLORSTYLE        = LIGHT
 
