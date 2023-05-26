@@ -32,7 +32,7 @@ typedef struct gps_data_t
     lla_t lla;
     ned_waypoint_t ned;
     double spd;        ///< speed in m/s
-    FixType fix;     ///< fix type
+    FixType fix;       ///< fix type
     uint8_t sat;       ///< number of satellites
     double headingNc;  ///< heading (not tilt compensated) in degrees
     double cog;        ///< course over ground
@@ -52,7 +52,18 @@ typedef struct gps_data_t
 
 extern gps_data_t gps_data;
 
+/**
+ * @brief initializes gps communication
+ * 
+ * @return int 0 on success, -1 on failure
+ */
 int gps_init();
+
+/**
+ * @brief gets raw data from gps
+ * 
+ * @return int 0 on success, -1 on failure
+ */
 int gps_getData();
 
 
