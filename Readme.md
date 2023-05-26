@@ -31,7 +31,7 @@ $ make
 ## Run RC_pilot:
 
 ```shell
-$ sudo ./bin/rc_pilot -s settings/quad_settings.json
+$ sudo ./bin/rc_pilot -s settings/[quad_settings].json
 ```
 
 # Miscellaneous
