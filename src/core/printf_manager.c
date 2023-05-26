@@ -66,7 +66,7 @@ static int __print_header()
     }
     if (settings.printf_tracking)
     {
-        printf("%sgps|moc|", __next_colour());
+        printf("%s gps|moc|", __next_colour());
     }
     if (settings.printf_altitude)
     {
@@ -102,7 +102,7 @@ static int __print_header()
     }
     if (settings.printf_gps)
     {
-        printf("%sgps_lat|gps_lon|gps_ele|gps_fix|", __next_colour());
+        printf("%sgps_lat|gps_lon|gps_ele|gps_fix|gps_valid|", __next_colour());
     }
     if (settings.printf_rm3100)
     {
@@ -170,7 +170,7 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_tracking)
         {
-            printf("%s %i | %i |", __next_colour(), gps_data.sat, xbeeMsg.trackingValid);
+            printf("%s %.2i | %i |", __next_colour(), gps_data.sat, xbeeMsg.trackingValid);
         }
         if (settings.printf_altitude)
         {
@@ -227,8 +227,8 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_gps)
         {
-            printf("%s%+7.2f|%+7.2f|%+7.2f|%+7.2d|", __next_colour(), 
-                gps_data.lla.lat, gps_data.lla.lon, gps_data.lla.alt, gps_data.fix);
+            printf("%s%+7.2f|%+7.2f|%+7.2f|%7.2d|  %7.1d|", __next_colour(), 
+                gps_data.lla.lat, gps_data.lla.lon, gps_data.lla.alt, gps_data.fix, gps_data.gps_valid);
         }
         if (settings.printf_rm3100)
         {
