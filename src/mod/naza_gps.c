@@ -32,51 +32,42 @@
 /**
  * Structure to store raw gps data as individual segments of data
  */
-typedef struct RawGPSData
+typedef struct __attribute__ ((packed)) RawGPSData
 {
-    long int dateAndTime;
-    long int longitude;
-    long int latitude;
-    long int altitude;
-    long int horrizontalAccuracyEstimate;
-    long int verticalAccuracyEstimate;
-    long int unknown1;
-    long int NEDNorthVelocity;
-    long int NEDEashVelocity;
-    long int NEDDownVelocity;
-    short int positionDOP;
-    short int verticalDOP;
-    short int northernDOP;
-    short int easternDOP;
-    unsigned char numberOfSatelites;
-    unsigned char unknown2;
-    unsigned char fixType;
-    unsigned char unknown3;
-    unsigned char fixStatusFlag;
-    short int unknown4;
-    unsigned char xorMask;
-    short int sequenceNumber;
+    int32_t dateAndTime;
+    int32_t longitude;
+    int32_t latitude;
+    int32_t altitude;
+    int32_t horrizontalAccuracyEstimate;
+    int32_t verticalAccuracyEstimate;
+    int32_t unknown1;
+    int32_t NEDNorthVelocity;
+    int32_t NEDEastVelocity;
+    int32_t NEDDownVelocity;
+    int16_t positionDOP;
+    int16_t verticalDOP;
+    int16_t northernDOP;
+    int16_t easternDOP;
+    uint8_t numberOfSatelites;
+    uint8_t unknown2;
+    uint8_t fixType;
+    uint8_t unknown3;
+    uint8_t fixStatusFlag;
+    int16_t unknown4;
+    uint8_t xorMask;
+    int16_t sequenceNumber;
 } RawGPSData;
 
 /**
  * Struct to store raw compass data
  */
-typedef struct RawCompassData
+typedef struct __attribute__ ((packed)) RawCompassData
 {
-    short int x;
-    short int y;
-    short int z;
+    uint16_t x;
+    uint16_t y;
+    uint16_t z;
 } RawCompassData;
 
-/**
- * This union is used to quickly convert between raw data structs and uint8_t arrays
- */
-typedef union struct_to_int
-{
-    RawGPSData gps_structure;
-    RawCompassData compass_structure;
-    uint8_t struct_as_int[PAYLOAD_SIZE];
-} struct_to_int;
 
 gps_data_t gps_data;
 
@@ -87,8 +78,8 @@ RawCompassData compass_data_raw;
  * Functions only to be used locally
  */
 static int __gps_parse(const int input);
-static void __updateCS(const int input);
 static void __gps_decode(unsigned char messageID);
+int __convert_gps_raw_to_final();
 
 int gps_init()
 {
@@ -162,8 +153,8 @@ static int __gps_parse(const int input)
         break;
 
     case VALIDATE_PAYLOAD:
-        if ((messageID == PAYLOAD_GPS && input == GPS_PAYLOAD_LENGTH)
-           || messageID == PAYLOAD_COMPASS && input == COMPASS_PAYLOAD_LENGTH)
+        if (((messageID == PAYLOAD_GPS) && (input == GPS_PAYLOAD_LENGTH))
+           || ((messageID == PAYLOAD_COMPASS) && (input == COMPASS_PAYLOAD_LENGTH)))
         {
             messageLength = input;
             count = 0;
@@ -206,10 +197,11 @@ static int __gps_parse(const int input)
         }
         else if (messageID == PAYLOAD_COMPASS)
         {
-            compass_data_raw = *(RawCompassData*)payload;
+            //compass_data_raw = *(RawCompassData*)payload;
         }
         parseState = START_BYTE_1;
         __gps_decode(messageID);
+        __convert_gps_raw_to_final();
     }
 
     return 0;
@@ -217,45 +209,42 @@ static int __gps_parse(const int input)
 
 static void __gps_decode(unsigned char messageID)
 {
-    struct_to_int gps_union;
-    static int16_t magXMax, magXMin, magYMax, magYMin;
     uint8_t mask = 0;
-    uint8_t mask_bits[8];
 
     if (messageID == PAYLOAD_GPS)
     {
         mask = gps_data_raw.xorMask;
 
-        gps_union.gps_structure = gps_data_raw;
+        uint8_t* temp = (uint8_t*)&gps_data_raw;
 
         for(int i = 0; i < GPS_PAYLOAD_LENGTH; i++)
-            gps_union.struct_as_int[i] ^= mask;
+            temp[i] ^= mask;
 
-        gps_data_raw = gps_union.gps_structure;
+        gps_data_raw = *(RawGPSData*)temp;
 
         gps_data_raw.numberOfSatelites ^= mask;
         gps_data_raw.unknown2 ^= mask;
-        gps_data_raw.sequenceNumber ^= (mask << 8) & mask;
+        gps_data_raw.sequenceNumber ^= (mask << 8) | mask;
 
     }
     else if (messageID == PAYLOAD_COMPASS)
     {
-        mask = compass_data_raw.z_vector & 0x00ff;
+        mask = compass_data_raw.z & 0x00ff;
 		mask = (((mask ^ (mask >> 4)) & 0x0F) | ((mask << 3) & 0xF0)) ^ (((mask & 0x01) << 3) | ((mask & 0x01) << 7));
 
-        gps_union.compass_structure = compass_data_raw;
+        uint8_t* temp = (uint8_t*)&compass_data_raw;
 
-        for(int i = 0; i < GPS_PAYLOAD_LENGTH; i++)
-            gps_union.struct_as_int[i] ^= mask;
+        for(int i = 0; i < COMPASS_PAYLOAD_LENGTH; i++)
+            temp[i] ^= mask;
+        
+        compass_data_raw = *(RawCompassData*)temp;
 
-        compass_data_raw = gps_union.compass_structure;
-
-        compass_data_raw.z_vector ^= mask;
+        compass_data_raw.z ^= mask;
     }
     return;
 }
 
-int convert_gps_raw_to_final()
+int __convert_gps_raw_to_final()
 {
     uint32_t time = gps_data_raw.dateAndTime;
 
@@ -279,8 +268,8 @@ int convert_gps_raw_to_final()
     gps_data.lla.alt = (double)gps_data_raw.altitude / 1000.0;
 
 
-    double Nvel = (double)gps_data_raw.NEDNorthVelocity / 100.0;
-    double Evel = (double)gps_data_raw.NEDEastVelocity / 100.0;
+    double nVel = (double)gps_data_raw.NEDNorthVelocity / 100.0;
+    double eVel = (double)gps_data_raw.NEDEastVelocity / 100.0;
     gps_data.spd = sqrt(nVel * nVel + eVel * eVel);
 
 
@@ -297,7 +286,7 @@ int convert_gps_raw_to_final()
     double edop = (double)gps_data_raw.easternDOP / 100.0;
     gps_data.hdop = sqrt(ndop * ndop + edop * edop);
 
-    gps_data.sat = dps_data_raw.numberOfSatelites;
+    gps_data.sat = gps_data_raw.numberOfSatelites;
 
 
     if(gps_data_raw.fixStatusFlag == 0x02 && gps_data_raw.fixType != NO_FIX)
@@ -321,17 +310,19 @@ int convert_gps_raw_to_final()
     static int16_t magXMax, magXMin, magYMax, magYMin;
 
     if (compass_data_raw.x > magXMax) 
-        magXMax = x;
+        magXMax = compass_data_raw.x;
     if (compass_data_raw.x < magXMin) 
-        magXMin = x;
+        magXMin = compass_data_raw.x;
     if (compass_data_raw.y > magYMax) 
-        magYMax = y;
+        magYMax = compass_data_raw.y;
     if (compass_data_raw.y < magYMin) 
-        magYMin = y;
+        magYMin = compass_data_raw.y;
     gps_data.headingNc = -atan2(compass_data_raw.y - ((magYMax + magYMin) / 2), 
                                 compass_data_raw.x - ((magXMax + magXMin) / 2)) * 180.0 / M_PI;
     if (gps_data.headingNc < 0)
         gps_data.headingNc += 360.0;
+
+    return 0;
 
 }
 

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include <coordinates.h>
+
 enum _FixType
 {
     NO_FIX = 0,
@@ -52,5 +54,7 @@ extern gps_data_t gps_data;
 
 int gps_init();
 int gps_getData();
+
+
 
 #endif
