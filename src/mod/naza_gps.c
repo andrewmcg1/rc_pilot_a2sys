@@ -6,6 +6,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <rc/time.h>
@@ -67,6 +68,17 @@ typedef struct __attribute__ ((packed)) RawCompassData
     uint16_t y;
     uint16_t z;
 } RawCompassData;
+
+
+typedef struct __attribute__ ((packed)) Time
+{
+    uint16_t second  :6;
+    uint16_t minute  :6;
+    uint16_t hour    :4;
+    uint16_t day     :5;
+    uint16_t month   :4;
+    uint16_t year    :7;
+} Time;
 
 
 gps_data_t gps_data;
@@ -245,23 +257,16 @@ static void __gps_decode(unsigned char messageID)
 }
 
 int __convert_gps_raw_to_final()
-{
-    uint32_t time = gps_data_raw.dateAndTime;
+{   
+    Time time;
+    memcpy(&time, &gps_data_raw.dateAndTime, 4);
 
-    gps_data.second = time & 0b00111111;
-    time >>= 6;
-    gps_data.minute = time & 0b00111111;
-    time >>= 6;
-    gps_data.hour = time & 0b00001111;
-    time >>= 4;
-    gps_data.day = time & 0b00011111;
-    time >>= 5;
-    if (gps_data.hour > 7) 
-        gps_data.day++;
-    gps_data.month = time & 0b00001111;
-    time >>= 4;
-    gps_data.year = time & 0b01111111;
-
+    gps_data.year = time.year;
+    gps_data.month = time.month;
+    gps_data.day = time.day;
+    gps_data.hour = time.hour;
+    gps_data.minute = time.minute;
+    gps_data.second = time.second;
 
     gps_data.lla.lat = (double)gps_data_raw.latitude / 10000000.0;
     gps_data.lla.lon = (double)gps_data_raw.longitude / 10000000.0;
