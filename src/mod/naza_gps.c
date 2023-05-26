@@ -32,40 +32,40 @@
 /**
  * Structure to store raw gps data as individual segments of data
  */
-typedef struct RawGPSData
+typedef struct __attribute__ ((packed)) RawGPSData
 {
-    long int dateAndTime;
-    long int longitude;
-    long int latitude;
-    long int altitude;
-    long int horrizontalAccuracyEstimate;
-    long int verticalAccuracyEstimate;
-    long int unknown1;
-    long int NEDNorthVelocity;
-    long int NEDEastVelocity;
-    long int NEDDownVelocity;
-    short int positionDOP;
-    short int verticalDOP;
-    short int northernDOP;
-    short int easternDOP;
-    unsigned char numberOfSatelites;
-    unsigned char unknown2;
-    unsigned char fixType;
-    unsigned char unknown3;
-    unsigned char fixStatusFlag;
-    short int unknown4;
-    unsigned char xorMask;
-    short int sequenceNumber;
+    int32_t dateAndTime;
+    int32_t longitude;
+    int32_t latitude;
+    int32_t altitude;
+    int32_t horrizontalAccuracyEstimate;
+    int32_t verticalAccuracyEstimate;
+    int32_t unknown1;
+    int32_t NEDNorthVelocity;
+    int32_t NEDEastVelocity;
+    int32_t NEDDownVelocity;
+    int16_t positionDOP;
+    int16_t verticalDOP;
+    int16_t northernDOP;
+    int16_t easternDOP;
+    uint8_t numberOfSatelites;
+    uint8_t unknown2;
+    uint8_t fixType;
+    uint8_t unknown3;
+    uint8_t fixStatusFlag;
+    int16_t unknown4;
+    uint8_t xorMask;
+    int16_t sequenceNumber;
 } RawGPSData;
 
 /**
  * Struct to store raw compass data
  */
-typedef struct RawCompassData
+typedef struct __attribute__ ((packed)) RawCompassData
 {
-    short int x;
-    short int y;
-    short int z;
+    uint16_t x;
+    uint16_t y;
+    uint16_t z;
 } RawCompassData;
 
 
@@ -210,7 +210,6 @@ static int __gps_parse(const int input)
 static void __gps_decode(unsigned char messageID)
 {
     uint8_t mask = 0;
-    uint8_t mask_bits[8];
 
     if (messageID == PAYLOAD_GPS)
     {
@@ -230,7 +229,7 @@ static void __gps_decode(unsigned char messageID)
     }
     else if (messageID == PAYLOAD_COMPASS)
     {
-        mask = compass_data_raw.z_vector & 0x00ff;
+        mask = compass_data_raw.z & 0x00ff;
 		mask = (((mask ^ (mask >> 4)) & 0x0F) | ((mask << 3) & 0xF0)) ^ (((mask & 0x01) << 3) | ((mask & 0x01) << 7));
 
         uint8_t* temp = (uint8_t*)&compass_data_raw;
@@ -240,9 +239,7 @@ static void __gps_decode(unsigned char messageID)
         
         compass_data_raw = *(RawCompassData*)temp;
 
-        compass_data_raw = gps_union.compass_structure;
-
-        compass_data_raw.z_vector ^= mask;
+        compass_data_raw.z ^= mask;
     }
     return;
 }
