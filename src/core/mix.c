@@ -72,6 +72,24 @@ static double mix_6x[][6] = {
     {0.0, 0.0, -1.0, 0.50, 0.0, 0.5}, 
     {0.0, 0.0, -1.0, 0.25, 0.5, -0.5}};
 
+/*
+ * 6X2
+ *
+ * top view:
+ *  6  1       cw ccw      X   Z down
+ * 4    3    ccw     cw    ^
+ *  2  5       cw ccw      + > Y
+ * columns: X Y Z Roll Pitch Yaw
+ * rows: motors 1-6
+ */
+static double mix_6x[][6] = {
+    {0.0, 0.0, -1.0, -0.25, 0.5, 0.5}, 
+    {0.0, 0.0, -1.0, 0.25, -0.5, -0.5},
+    {0.0, 0.0, -1.0, -0.50, 0.0, -0.5},
+    {0.0, 0.0, -1.0, 0.50, 0.0, 0.5}, 
+    {0.0, 0.0, -1.0, -0.25, -0.5, 0.5}, 
+    {0.0, 0.0, -1.0, 0.25, 0.5, -0.5}};
+
 /**
  * 8X like DJI S1000
  *
@@ -158,6 +176,11 @@ int mix_init(rotor_layout_t layout)
             rotors = 6;
             dof = 4;
             mix_matrix = mix_6x;
+            break;
+        case LAYOUT_6X2:
+            rotors = 6;
+            dof = 4;
+            mix_matrix = mix_6x2;
             break;
         case LAYOUT_8X:
             rotors = 8;

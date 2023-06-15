@@ -31,6 +31,7 @@ typedef enum rotor_layout_t
     LAYOUT_4X2,
     LAYOUT_4PLUS,
     LAYOUT_6X,
+    LAYOUT_6X2,
     LAYOUT_8X,
     LAYOUT_6DOF_ROTORBITS,
     LAYOUT_6DOF_5INCH_MONOCOQUE
