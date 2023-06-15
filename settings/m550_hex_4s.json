@@ -1,9 +1,9 @@
 {
-	"name": "QUADCOPTER",
+	"name": "HEXACOPTER",
 
 	"warnings_en": true,
 
-	"layout": "LAYOUT_4X2",
+	"layout": "LAYOUT_6X",
 	"thrust_map": "AIR2213_3S",
 	"orientation": "ORIENTATION_X_FORWARD",
 	"v_nominal": 16.8,
@@ -28,7 +28,7 @@
 
 	"num_dsm_modes": 2,
 	"flight_mode_1": "MANUAL",
-	"flight_mode_2": "LOITER",
+	"flight_mode_2": "MANUAL",
 	"flight_mode_3": "MANUAL",
 
 	"dsm_thr_ch": 1,

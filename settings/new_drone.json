@@ -29,8 +29,8 @@
 
 	"num_dsm_modes": 3,
 	"flight_mode_1": "MANUAL",
-	"flight_mode_2": "AUTONOMOUS",
-	"flight_mode_3": "LOITER",
+	"flight_mode_2": "MANUAL",
+	"flight_mode_3": "MANUAL",
 
 	"dsm_thr_ch": 1,
 	"dsm_thr_pol": 1,
