@@ -13,7 +13,7 @@ main() {
 				if [ $2 == windows ]; then
 					DEST=debian@192.168.7.2
 				elif [ $2 == linux ]; then
-					DEST=debian@192.168.6.2
+					DEST=debian@192.168.7.2
 				else
 					usage_error
 				fi

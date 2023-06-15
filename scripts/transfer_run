@@ -1,0 +1,75 @@
+#!/bin/bash
+
+main() {
+    # Array of arguments
+	args=("$@")
+
+    DEST=debian@192.168.7.2
+    PASS=temppwd
+
+    FILE=$1
+    EXT="${FILE##*.}"
+
+    for i in "${args[@]}"
+    do
+        if [ $i = -o ]
+        then
+            i=i+1
+            GCCOUT=${i}
+            break
+        else
+            GCCOUT=a.out
+        fi
+    done
+
+    if [ $EXT = c ]
+    then 
+        sshpass -p $PASS scp -q $FILE $DEST:test
+        shift
+        sshpass -p $PASS ssh -qt $DEST StrictHostKeyChecking=no "cd test && echo $PASS | sudo -S --prompt="" gcc $FILE $@ && sudo ./$GCCOUT"
+	else
+        FOLDER=$1
+
+		FILE=$2
+        EXT="${FILE##*.}"
+
+        if [ $EXT = c ]
+        then
+            sshpass -p $PASS scp -rq $FOLDER $DEST:test
+            shift
+            shift
+            sshpass -p $PASS ssh -qt $DEST StrictHostKeyChecking=no "cd test && cd $FOLDER && echo $PASS | sudo -S --prompt="" gcc $FILE $@ && sudo ./$GCCOUT"
+        else
+            usage_error
+        fi
+	fi
+}
+
+
+function usage_error() {
+
+    echo "---------- HOW TO USE THIS SCRIPT ----------"
+	echo "Usage: ./transfer_run [folder(optional)] [file.c] [compiler flags]"
+    echo "Transfers folder or file to Beaglebone and puts it in the test folder."
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 1: ./transfer_run test_file.c -librobotcontrol"
+	echo "          will transfer test_file.c to test file, compile it with robotcontrol, and run it."
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 2: ./transfer_run test_folder test_file.c -librobotcontrol"
+	echo "          will transfer test_folder to test folder on Beaglebone, compile test_file.c with robotcontrol, and run it."
+    echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 3: ./transfer_run test_folder test_file.c test_file.h"
+	echo "          will transfer test_folder to test folder on Beaglebone, compile test_file.c with test_file.h, and run it."
+	echo ""
+	echo "-----------------------------------------------------------------------"
+	echo "Example 4: ./transfer_run test_file.c -o testEXE"
+	echo "          will transfer test_folder to test folder on Beaglebone, compile test_file.c to an executable called testEXE, and run it."
+	echo ""
+    exit 1
+}
+
+
+main "$@"

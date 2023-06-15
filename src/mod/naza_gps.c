@@ -1,5 +1,6 @@
 /**
  * @file naza_gps.c
+ * 
  **/
 
 #include <assert.h>
@@ -16,19 +17,19 @@
 #include <naza_gps.h>
 #include <state_estimator.h>
 
-#define BAUDRATE    115200        // default gps baudrate
+#define BAUDRATE    115200        ///< default gps baudrate
 #define TIMEOUT_S   .5
 
 #define GPS_BUS 2
 
-#define GPS_PAYLOAD_LENGTH 58                     // size of gps data in bytes
-#define COMPASS_PAYLOAD_LENGTH 6                  // size of compass data in bytes
-#define PAYLOAD_SIZE GPS_PAYLOAD_LENGTH           // size of total gps payload
+#define GPS_PAYLOAD_LENGTH 58                     ///< size of gps data in bytes
+#define COMPASS_PAYLOAD_LENGTH 6                  ///< size of compass data in bytes
+#define PAYLOAD_SIZE GPS_PAYLOAD_LENGTH           ///< size of total gps payload
 
-#define GPS_STARTBYTE1 0x55       // first payload start byte
-#define GPS_STARTBYTE2 0xAA       // second payload start byte
-#define PAYLOAD_GPS 0x10          // gps message ID byte
-#define PAYLOAD_COMPASS 0x20      // compass message ID byte
+#define GPS_STARTBYTE1 0x55       ///< first payload start byte
+#define GPS_STARTBYTE2 0xAA       ///< second payload start byte
+#define PAYLOAD_GPS 0x10          ///< gps message ID byte
+#define PAYLOAD_COMPASS 0x20      ///< compass message ID byte
 
 /**
  * Structure to store raw gps data as individual segments of data
