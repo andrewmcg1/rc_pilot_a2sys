@@ -103,7 +103,7 @@ void new_dsm_data_callback()
     new_roll = rc_dsm_ch_normalized(settings.dsm_roll_ch) * settings.dsm_roll_pol;
     new_pitch = rc_dsm_ch_normalized(settings.dsm_pitch_ch) * settings.dsm_pitch_pol;
     new_yaw =
-        deadzone(rc_dsm_ch_normalized(settings.dsm_yaw_ch) * settings.dsm_yaw_pol, YAW_DEADZONE);
+        YAW_DIRECTION * deadzone(rc_dsm_ch_normalized(settings.dsm_yaw_ch) * settings.dsm_yaw_pol, YAW_DEADZONE);
     new_mode = rc_dsm_ch_normalized(settings.dsm_mode_ch) * settings.dsm_mode_pol;
 
     // kill mode behaviors

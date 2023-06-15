@@ -10,7 +10,7 @@
 
 	"enable_mpu_magnetometer": true,
 
-	"enable_mocap_dropout_emergency_land": true,
+	"enable_mocap_dropout_emergency_land": false,
 	"mocap_dropout_timeout_ms": 300.0,
 	"dropout_z_throttle": -0.30,
 

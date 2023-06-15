@@ -76,6 +76,8 @@ typedef enum fail_state_t
 #define MAX_XY_ACCELERATION 5.0 // m/s^2
 #define MAX_Z_ACCELERATION 5.0   // m/s^2
 
+#define YAW_DIRECTION -1.0  // invert yaw direction
+
 // controller absolute limits
 #define MAX_ROLL_COMPONENT 0.4
 #define MAX_PITCH_COMPONENT 0.4
