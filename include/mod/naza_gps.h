@@ -1,3 +1,18 @@
+/**
+ * @file naza_gps.h
+ * 
+ * @brief Code for reading GPS data from the DJI Naza module using struct casts
+ * 
+ * 
+ * @author Andrew McGrellis & Jacob Shatto
+ * 
+ * @date 5/26/23
+ * 
+ * @addtogroup Naza_gps
+ **/
+
+
+
 #ifndef __NAZA_GPS__
 #define __NAZA_GPS__
 
@@ -27,10 +42,14 @@ enum _ParseState
 };
 typedef enum _ParseState ParseState;
 
+/**
+ * @brief GPS data
+ * 
+ */
 typedef struct gps_data_t
 {
-    lla_t lla;
-    ned_waypoint_t ned;
+    lla_t lla;  ///< Longitude, Latitude, Altitude
+    ned_waypoint_t ned; ///< North, East, Down coordinates
     double spd;        ///< speed in m/s
     FixType fix;       ///< fix type
     uint8_t sat;       ///< number of satellites

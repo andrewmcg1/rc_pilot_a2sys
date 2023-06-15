@@ -5,7 +5,7 @@
 ## Install dependencies on Beaglebone:
 
 ```shell
-$ sudo apt install libjson-c-dev libjson-c3
+$ sudo apt install libjson-c-dev
 ```
 
 ## Install librobotcontrol on Beaglebone:

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+main() {
+    # Array of arguments
+	args=("$@")
+
+	# Define Destination (DEST)
+	DEST1='192.168.6.2'
+	DEST2='192.168.7.2'
+	
+	ssh-keyscan -H $DEST1 >> $HOME/.ssh/known_hosts
+	ssh-keyscan -H $DEST2 >> $HOME/.ssh/known_hosts
+}
+
+main "$@"
