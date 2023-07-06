@@ -48,6 +48,23 @@ typedef struct __attribute__((packed)) xbee_packet_v2_t
     float yaw;      ///< yaw
 } xbee_packet_v2_t;
 
+// v3 XBee Packet
+typedef struct __attribute__((packed)) xbee_packet_v3_t {
+  uint32_t time;         ///< Unique id for the rigid body being described
+  float x;               ///< x-position in the Optitrack frame
+  float y;               ///< y-position in the Optitrack frame
+  float z;               ///< z-position in the Optitrack frame
+  float qx;              ///< qx of quaternion
+  float qy;              ///< qy of quaternion
+  float qz;              ///< qz of quaternion
+  float qw;              ///< qw of quaternion
+  int8_t trackingValid;  // (bool) of whether or not tracking was valid (0 or 1)
+  int8_t state;          ///< state
+  float x_d;             ///< Desired X Position
+  float y_d;             ///< Desired Y Position
+  float z_d;             ///< Desired Z Position
+} xbee_packet_v3_t;
+
 typedef xbee_packet_v1_t xbee_packet_t;
 
 #define OPTI_NUM_FRAMING_BYTES 2                ///< 2 START bytes
@@ -58,6 +75,9 @@ typedef xbee_packet_v1_t xbee_packet_t;
 
 #define OPTI_DATA_LENGTH_V2 sizeof(xbee_packet_v2_t)  ///< Actual Packet Being Sent
 #define OPTI_PACKET_LENGTH_V2 OPTI_DATA_LENGTH_V2 + OPTI_NUM_FRAMING_BYTES + OPTI_NUM_CHECKSUM_BYTES
+
+#define OPTI_DATA_LENGTH_V3 sizeof(xbee_packet_v3_t)  ///< Actual Packet Being Sent
+#define OPTI_PACKET_LENGTH_V3 OPTI_DATA_LENGTH_V3 + OPTI_NUM_FRAMING_BYTES + OPTI_NUM_CHECKSUM_BYTES
 
 #define OPTI_MAX_PACKET_LENGTH OPTI_PACKET_LENGTH_V1
 #define OPTI_START_BYTE1 0x81
@@ -70,6 +90,7 @@ typedef xbee_packet_v1_t xbee_packet_t;
 int opti_data_length, opti_packet_length;
 extern xbee_packet_t xbeeMsg;
 extern xbee_packet_v2_t xbeeMsg_v2;
+extern xbee_packet_v3_t xbeeMsg_v3;
 extern int xbee_portID;
 extern float xbee_x_dot;
 extern float xbee_y_dot;

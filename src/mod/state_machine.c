@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 
+int delta_active = false;
+
 static const char* sm_alph_strings[] = {
     "ENTER_STANDBY",
     "ENTER_TAKEOFF",
@@ -253,6 +255,23 @@ void sm_transition(state_machine_t* sm, sm_alphabet input)
         case NAILING:
             fprintf(stderr,
                 "\nNAILING mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+                sm_alph_strings[input]);
+            sm->current_state = STANDBY;
+            sm->changedState = true;
+            break;
+        case DELTA_LOITER:
+            delta_active = true;
+            if(sm->changedState)
+            {
+                __build_waypoit_filename(
+                    waypoint_filename, settings.wp_folder, settings.wp_loiter_filename);
+
+                set_new_path(waypoint_filename);
+                sm->changedState = false;
+            }
+
+            fprintf(stderr,
+                "\nDELTA_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
                 sm_alph_strings[input]);
             sm->current_state = STANDBY;
             sm->changedState = true;

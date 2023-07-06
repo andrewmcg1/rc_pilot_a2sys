@@ -33,6 +33,7 @@
 
 xbee_packet_t xbeeMsg;  // Defined as extern in xbee_receive.h
 xbee_packet_v2_t xbeeMsg_v2; // Defined as extern in xbee_receive.h
+xbee_packet_v3_t xbeeMsg_v3; // Defined as extern in xbee_receive.h
 int xbee_portID;        // Defined as extern in xbee_receive.h
 rc_ringbuf_t x_position_track;  //Defined as extern in xbee_receive.h
 rc_ringbuf_t y_position_track;  //Defined as extern in xbee_receive.h
@@ -122,6 +123,17 @@ int XBEE_init(const char *xbee_port)
         case 2:
             opti_data_length = OPTI_DATA_LENGTH_V2;
             opti_packet_length = OPTI_PACKET_LENGTH_V2;
+
+            // Pre-fill some packet values so we don't recopy later
+            xbeeMsg.qx = 0;
+            xbeeMsg.qy = 0;
+            xbeeMsg.time = 0;
+            xbeeMsg.trackingValid = 0;
+            xbeeMsg.sm_event = 0;
+            break;
+        case 3:
+            opti_data_length = OPTI_DATA_LENGTH_V3;
+            opti_packet_length = OPTI_PACKET_LENGTH_V3;
 
             // Pre-fill some packet values so we don't recopy later
             xbeeMsg.qx = 0;
@@ -243,6 +255,19 @@ void __copy_xbee_msg(unsigned char* dataPacket)
             xbeeMsg.z = xbeeMsg_v2.z;
             xbeeMsg.qz = sin(xbeeMsg_v2.yaw/2);
             xbeeMsg.qw = cos(xbeeMsg_v2.yaw/2);
+            xbeeMsg.trackingValid = 1;
+            break;
+
+        case 3:
+            // printf("Copying XBee Message V3!\n");
+            memcpy(&xbeeMsg_v3, dataPacket, opti_data_length);
+            xbeeMsg.x = xbeeMsg_v3.x;
+            xbeeMsg.y = xbeeMsg_v3.y;
+            xbeeMsg.z = xbeeMsg_v3.z;
+            xbeeMsg.qx = xbeeMsg_v3.qx;
+            xbeeMsg.qy = xbeeMsg_v3.qy;
+            xbeeMsg.qz = xbeeMsg_v3.qz;
+            xbeeMsg.qw = xbeeMsg_v3.qw;
             xbeeMsg.trackingValid = 1;
             break;
         default:

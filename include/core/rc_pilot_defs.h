@@ -65,6 +65,11 @@ typedef enum fail_state_t
 #define ALT_CUTOFF_FREQ 2.0
 #define BMP_RATE_DIV 10  // optionally sample bmp less frequently than mpu
 
+// betaflight acro rates // actual rate limit is 177.778
+#define RC_RATE .40
+#define SUPER_RATE .55
+#define RC_EXPO .03
+
 // Intermediate Controller Value Limits
 #define MAX_ROLL_RATE 3.0        // rad/s
 #define MAX_PITCH_RATE 3.0       // rad/s

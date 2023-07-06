@@ -93,6 +93,7 @@
 	"wp_folder": "/home/debian/waypoints/",
 	"wp_takeoff_filename": "takeoff_waypoints.cfg",
 	"wp_guided_filename": "guided_waypoints.cfg",
+    "wp_loiter_filename": "loiter_waypoints.cfg",
 	"wp_landing_filename": "landing_waypoints.cfg",
 
 	"xbee_serial_port": "/dev/ttyS5",

@@ -195,6 +195,12 @@ static int __parse_layout(void)
         settings.layout = LAYOUT_6X;
         settings.dof = 4;
     }
+    else if (strcmp(tmp_str, "LAYOUT_6X2") == 0)
+    {
+        settings.num_rotors = 6;
+        settings.layout = LAYOUT_6X2;
+        settings.dof = 4;
+    }
     else if (strcmp(tmp_str, "LAYOUT_8X") == 0)
     {
         settings.num_rotors = 8;
@@ -815,6 +821,7 @@ int settings_load_from_file(const char* path)
     PARSE_STRING(wp_folder)
     PARSE_STRING(wp_takeoff_filename)
     PARSE_STRING(wp_guided_filename)
+    PARSE_STRING(wp_loiter_filename)
     PARSE_STRING(wp_landing_filename)
 
     // XBEE SERIAL PORT

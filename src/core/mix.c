@@ -82,7 +82,7 @@ static double mix_6x[][6] = {
  * columns: X Y Z Roll Pitch Yaw
  * rows: motors 1-6
  */
-static double mix_6x[][6] = {
+static double mix_6x2[][6] = {
     {0.0, 0.0, -1.0, -0.25, 0.5, 0.5}, 
     {0.0, 0.0, -1.0, 0.25, -0.5, -0.5},
     {0.0, 0.0, -1.0, -0.50, 0.0, -0.5},

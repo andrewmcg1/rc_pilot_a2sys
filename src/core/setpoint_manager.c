@@ -54,6 +54,29 @@ static void __reset_waypoint_counter();
 
 /***********************************/
 
+double betaflight_acro_rate(double rcCommand, double rcRate, double superRate, double expo)
+{
+    double absRcCommand = fabs(rcCommand);
+
+    double min = (1.0 - absRcCommand * (superRate)) < 1.00 ? (1.0 - absRcCommand * (superRate)) : 1.00;
+    double clamp = min > 0.01 ? min : 0.01;
+
+    if(rcRate > 2.0)
+        rcRate += (14.54 * (rcRate - 2.0));
+
+    if(expo != 0)
+        rcCommand = rcCommand * pow(fabs(rcCommand), 3) * expo + rcCommand * (1.0 - expo);
+
+    double angleRate = 200.0 * rcRate * rcCommand;
+    if(superRate != 0){
+        double rcSuperFactor = 1.0 / clamp;
+        angleRate *= rcSuperFactor;
+    }
+
+    return angleRate * M_PI / 180.0;
+
+}
+
 void setpoint_update_yaw(void)
 {
     // if throttle stick is down all the way, probably landed, so

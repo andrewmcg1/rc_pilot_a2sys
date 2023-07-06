@@ -96,7 +96,13 @@ typedef enum flight_mode_t
      * Throttle stick directly controls desired Z acceleration
      * Used for testing/tuning z_dot controller
      */
-    TEST_BENCH_DIRECT_Z_VEL
+    TEST_BENCH_DIRECT_Z_VEL,
+    /**
+     * Autonomous flight via mocap, and can control the movement of a delta arm attatched.
+     * 
+     */
+    DELTA_ARM
+
 } flight_mode_t;
 
 /** This function is basically a list of the enums in 'flight_mode_t'

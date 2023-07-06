@@ -15,6 +15,9 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+extern int delta_active;
+
 /**
  * @brief List of possible states for the state machine. States can be added as needed for new
  * functionality.
@@ -27,7 +30,8 @@ typedef enum sm_states
     LANDING = 3,
     SM_LOITER = 4,
     NAILING = 5,
-    RETURN = 6,
+    DELTA_LOITER = 6,
+    RETURN = 7,
 } sm_states;
 
 /**

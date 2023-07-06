@@ -8,6 +8,7 @@
 #include <settings.h>
 #include <state_machine.h>
 #include <flight_mode.h>
+#include <xbee_receive.h>
 
 // Flight Mode Startup Delay variables
 static uint64_t time_fm_started_ns;
@@ -301,9 +302,9 @@ static void __assign_setpoints_and_enable_loops()
             setpoint.en_XY_ctrl = 0;
 
             // 2) Assign Setpoints
-            setpoint.roll_dot =  user_input.roll_stick  * MAX_ROLL_RATE;
-            setpoint.pitch_dot = user_input.pitch_stick * MAX_PITCH_RATE;
-            setpoint.yaw_dot =   user_input.yaw_stick   * MAX_YAW_RATE;
+            setpoint.roll_dot =  betaflight_acro_rate(user_input.roll_stick, RC_RATE, SUPER_RATE, RC_EXPO);
+            setpoint.pitch_dot = betaflight_acro_rate(user_input.pitch_stick, RC_RATE, SUPER_RATE, RC_EXPO);
+            setpoint.yaw_dot =   betaflight_acro_rate(user_input.yaw_stick, RC_RATE, SUPER_RATE, RC_EXPO);
             setpoint.Z_throttle = -user_input.thr_stick / (cos(state_estimate.roll) * cos(state_estimate.pitch));
             break;
 
@@ -345,6 +346,28 @@ static void __assign_setpoints_and_enable_loops()
             setpoint.pitch = user_input.pitch_stick;
             setpoint_update_yaw();
             setpoint.Z_dot_ff = -1 * (2*user_input.thr_stick - 1) * MAX_Z_VELOCITY;
+            break;
+
+        case DELTA_ARM:
+            // 1) Enable PID Loops based on flight mode
+            setpoint.en_6dof = 0; //(settings.dof == 6);
+            setpoint.en_rpy_rate_ctrl = 1;
+            setpoint.en_rpy_ctrl = 1;
+            setpoint.en_Z_ctrl = 1;
+            setpoint.en_XY_ctrl = 1;
+
+            setpoint.X = xbeeMsg_v3.x_d;
+            setpoint.Y = xbeeMsg_v3.y_d;
+            setpoint.Z = xbeeMsg_v3.z_d;
+            setpoint.X_dot_ff = 0;
+            setpoint.Y_dot_ff = 0;
+            setpoint.Z_dot_ff = 0;
+            setpoint.roll_ff = 0;
+            setpoint.pitch_ff = 0;
+            setpoint.yaw = 0;
+            setpoint.roll_dot_ff = 0;
+            setpoint.pitch_dot_ff = 0;
+            setpoint.yaw_dot_ff = 0;
             break;
 
         default:  // should never get here

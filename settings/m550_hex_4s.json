@@ -3,7 +3,7 @@
 
 	"warnings_en": true,
 
-	"layout": "LAYOUT_6X",
+	"layout": "LAYOUT_6X2",
 	"thrust_map": "AIR2213_3S",
 	"orientation": "ORIENTATION_X_FORWARD",
 	"v_nominal": 16.8,
@@ -51,7 +51,7 @@
 	"printf_battery": true,
 	"printf_position": true,
 	"printf_rpy": false,
-	"printf_sticks": false,
+	"printf_sticks": true,
 	"printf_setpoint": true,
 	"printf_u": false,
 	"printf_motors": false,

@@ -27,9 +27,9 @@
 	"rm3100_CCR_value": 200,
 	"rm3100_i2c_addr": 3,
 
-	"num_dsm_modes": 2,
+	"num_dsm_modes": 3,
 	"flight_mode_1": "MANUAL",
-	"flight_mode_2": "LOITER",
+	"flight_mode_2": "ACRO",
 	"flight_mode_3": "MANUAL",
 
 	"dsm_thr_ch": 1,

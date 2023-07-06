@@ -179,6 +179,15 @@ int set_new_path(const char* path_file);
 void setpoint_update_yaw(void);
 
 /**
+ * @brief   Calculates angle rate of drone movement, using the betaflight rate format
+ *
+ * Usage: controller.c, line 304
+ *        controller.c, line 305
+ *        controller.c, line 306
+ */
+double betaflight_acro_rate(double rcCommand, double rcRate, double superRate, double expo);
+
+/**
  * @brief   Update Z value based on z_dot and user stick
  *
  * Usage: controller.c, line 208

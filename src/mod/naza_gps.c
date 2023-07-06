@@ -98,7 +98,7 @@ RawCompassData compass_data_raw;
  * 
  * @param current_byte byte to parse
  */
-static int __gps_parse(const int current_byte);
+static void __gps_parse(const int current_byte);
 
 /**
  * @brief decodes gps values from buffer

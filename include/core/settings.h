@@ -191,6 +191,7 @@ typedef struct settings_t
     ///@{
     char wp_takeoff_filename[100];
     char wp_guided_filename[100];
+    char wp_loiter_filename[100];
     char wp_landing_filename[100];
     ///@}
 
