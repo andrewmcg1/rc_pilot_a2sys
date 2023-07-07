@@ -50,19 +50,19 @@ typedef struct __attribute__((packed)) xbee_packet_v2_t
 
 // v3 XBee Packet
 typedef struct __attribute__((packed)) xbee_packet_v3_t {
-  uint32_t time;         ///< Unique id for the rigid body being described
-  float x;               ///< x-position in the Optitrack frame
-  float y;               ///< y-position in the Optitrack frame
-  float z;               ///< z-position in the Optitrack frame
-  float qx;              ///< qx of quaternion
-  float qy;              ///< qy of quaternion
-  float qz;              ///< qz of quaternion
-  float qw;              ///< qw of quaternion
-  int8_t trackingValid;  // (bool) of whether or not tracking was valid (0 or 1)
-  int8_t state;          ///< state
-  float x_d;             ///< Desired X Position
-  float y_d;             ///< Desired Y Position
-  float z_d;             ///< Desired Z Position
+    uint32_t time;         ///< Unique id for the rigid body being described
+    float x;               ///< x-position in the Optitrack frame
+    float y;               ///< y-position in the Optitrack frame
+    float z;               ///< z-position in the Optitrack frame
+    float qx;              ///< qx of quaternion
+    float qy;              ///< qy of quaternion
+    float qz;              ///< qz of quaternion
+    float qw;              ///< qw of quaternion
+    int8_t trackingValid;  // (bool) of whether or not tracking was valid (0 or 1)
+    int8_t state;          ///< state
+    float x_d;             ///< Desired X Position
+    float y_d;             ///< Desired Y Position
+    float z_d;             ///< Desired Z Position
 } xbee_packet_v3_t;
 
 typedef xbee_packet_v1_t xbee_packet_t;
