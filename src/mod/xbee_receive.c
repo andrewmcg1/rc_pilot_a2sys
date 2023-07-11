@@ -18,7 +18,7 @@
 #include <string.h>
 #include <unistd.h>  // read / write
 
-// Below for PRId64
+ // Below for PRId64
 #include <inttypes.h>
 
 #include <rc/time.h>
@@ -28,6 +28,7 @@
 #include <xbee_receive.h>
 #include <crc16.h>
 #include <settings.h>
+#include <delta_arm.h>
 
 #include <math.h>
 
@@ -52,7 +53,7 @@ uint64_t lastime = 0;
 uint64_t thistime = 0;
 float xbee_dt; //Defined as extern
 
-int XBEE_init(const char *xbee_port)
+int XBEE_init(const char* xbee_port)
 {
     int baudRate = 57600;
     xbee_portID = serial_open(xbee_port, baudRate, 0);  // Nonblocking = 0, BLOCKING = 1
@@ -67,19 +68,23 @@ int XBEE_init(const char *xbee_port)
     z_position_track = rc_ringbuf_empty();
     time_track = rc_ringbuf_empty();
 
-    if (rc_ringbuf_alloc(&x_position_track, DIFF_POINTS) == -1) {
+    if (rc_ringbuf_alloc(&x_position_track, DIFF_POINTS) == -1)
+    {
         printf("Failed to allocate x_position_track ringbuf");
         return -1;
     }
-    if (rc_ringbuf_alloc(&y_position_track, DIFF_POINTS) == -1) {
+    if (rc_ringbuf_alloc(&y_position_track, DIFF_POINTS) == -1)
+    {
         printf("Failed to allocate y_position_track ringbuf");
         return -1;
     }
-    if (rc_ringbuf_alloc(&z_position_track, DIFF_POINTS) == -1) {
+    if (rc_ringbuf_alloc(&z_position_track, DIFF_POINTS) == -1)
+    {
         printf("Failed to allocate z_position_track ringbuf");
         return -1;
     }
-    if (rc_ringbuf_alloc(&time_track, 2) == -1) {
+    if (rc_ringbuf_alloc(&time_track, 2) == -1)
+    {
         printf("Failed to allocate time_track ringbuf");
         return -1;
     }
@@ -116,36 +121,36 @@ int XBEE_init(const char *xbee_port)
     // Init packet based on version
     switch (settings.xbee_packet_version)
     {
-        case 1:
-            opti_data_length = OPTI_DATA_LENGTH_V1;
-            opti_packet_length = OPTI_PACKET_LENGTH_V1;
-            break;
-        case 2:
-            opti_data_length = OPTI_DATA_LENGTH_V2;
-            opti_packet_length = OPTI_PACKET_LENGTH_V2;
+    case 1:
+        opti_data_length = OPTI_DATA_LENGTH_V1;
+        opti_packet_length = OPTI_PACKET_LENGTH_V1;
+        break;
+    case 2:
+        opti_data_length = OPTI_DATA_LENGTH_V2;
+        opti_packet_length = OPTI_PACKET_LENGTH_V2;
 
-            // Pre-fill some packet values so we don't recopy later
-            xbeeMsg.qx = 0;
-            xbeeMsg.qy = 0;
-            xbeeMsg.time = 0;
-            xbeeMsg.trackingValid = 0;
-            xbeeMsg.sm_event = 0;
-            break;
-        case 3:
-            opti_data_length = OPTI_DATA_LENGTH_V3;
-            opti_packet_length = OPTI_PACKET_LENGTH_V3;
+        // Pre-fill some packet values so we don't recopy later
+        xbeeMsg.qx = 0;
+        xbeeMsg.qy = 0;
+        xbeeMsg.time = 0;
+        xbeeMsg.trackingValid = 0;
+        xbeeMsg.sm_event = 0;
+        break;
+    case 3:
+        opti_data_length = OPTI_DATA_LENGTH_V3;
+        opti_packet_length = OPTI_PACKET_LENGTH_V3;
 
-            // Pre-fill some packet values so we don't recopy later
-            xbeeMsg.qx = 0;
-            xbeeMsg.qy = 0;
-            xbeeMsg.time = 0;
-            xbeeMsg.trackingValid = 0;
-            xbeeMsg.sm_event = 0;
-            break;
-        default:
-            opti_data_length = OPTI_DATA_LENGTH_V1;
-            opti_packet_length = OPTI_PACKET_LENGTH_V1;
-            break;
+        // Pre-fill some packet values so we don't recopy later
+        xbeeMsg.qx = 0;
+        xbeeMsg.qy = 0;
+        xbeeMsg.time = 0;
+        xbeeMsg.trackingValid = 0;
+        xbeeMsg.sm_event = 0;
+        break;
+    default:
+        opti_data_length = OPTI_DATA_LENGTH_V1;
+        opti_packet_length = OPTI_PACKET_LENGTH_V1;
+        break;
     }
 
 
@@ -163,48 +168,54 @@ int XBEE_getData()
     static uint8_t chksm0 = 0;
     static uint8_t chksm1 = 0;
 
-    while(read(xbee_portID,ptr,1) > 0) {    
+    while (read(xbee_portID, ptr, 1) > 0)
+    {
         // 1) if the first Byte is wrong keep looking
-        if( (ptr == serialPacket) && (ptr[0] != OPTI_START_BYTE1) ) {
+        if ((ptr == serialPacket) && (ptr[0] != OPTI_START_BYTE1))
+        {
             ptr = serialPacket;
             // printf("First XBee Byte NOT correct!\n");
             continue;
         }
 
         // 2) if the second Byte is wrong keep looking
-        if( (ptr == serialPacket + 1) && (ptr[0] != OPTI_START_BYTE2) ) {
+        if ((ptr == serialPacket + 1) && (ptr[0] != OPTI_START_BYTE2))
+        {
             ptr = serialPacket;
             // printf("Second XBee Byte NOT correct!\n");
             continue;
         }
 
         // 3) Reset the checksum on the third byte
-        if(ptr == serialPacket + 2) {
+        if (ptr == serialPacket + 2)
+        {
             chksm0 = 0;
             chksm1 = 0;
-        } 
+        }
 
         // 4) Compute the checksum on the data bytes
-        if ((ptr >= serialPacket + 2) && (ptr < serialPacket + opti_data_length + OPTI_NUM_FRAMING_BYTES) ) {
+        if ((ptr >= serialPacket + 2) && (ptr < serialPacket + opti_data_length + OPTI_NUM_FRAMING_BYTES))
+        {
             chksm0 += ptr[0];
             chksm1 += chksm0;
             // printf("chksm0: %02x, chksm1: %02x \n", chksm0, chksm1);
         }
 
         // 5) And then increment the ptr to keep reading in bytes
-        ptr++;	
+        ptr++;
 
         // 6) Once we have all of the Bytes, Process them!
-        if( (ptr-serialPacket) == opti_packet_length) {
+        if ((ptr - serialPacket) == opti_packet_length)
+        {
             ptr = serialPacket;
 
-            uint16_t checksum_calculated = (uint16_t) ((chksm1 << 8) | chksm0);
+            uint16_t checksum_calculated = (uint16_t)((chksm1 << 8) | chksm0);
             uint16_t checksum_received = 0;
             // uint16_t checksum_with_function = fletcher16(dataPacket, OPTI_DATA_LENGTH);
 
             memcpy(&checksum_received, &dataPacket[opti_data_length], sizeof(checksum_received));
             // printf("Checksum calculated: %u; Checksum Recieved: %u \n", checksum_calculated, checksum_received);
-            
+
             if (checksum_received == checksum_calculated)
             {
                 __copy_xbee_msg(dataPacket);
@@ -214,11 +225,12 @@ int XBEE_getData()
                 rc_ringbuf_insert(&x_position_track, xbeeMsg.x);
                 rc_ringbuf_insert(&y_position_track, xbeeMsg.y);
                 rc_ringbuf_insert(&z_position_track, xbeeMsg.z);
-                
+
                 __diff_function(&x_position_track, &y_position_track, &z_position_track);
 
                 return 0;
-            } else 
+            }
+            else
             {
                 // printf("Wrong checksum!");
                 // printf("Received %04x ", checksum_received);
@@ -226,12 +238,12 @@ int XBEE_getData()
                 // printf("Calculated %04x\n", checksum_calculated);
                 return -1;
             }
-        }	
+        }
     }
 
     // Check to see if mocap is still valid (separate from OPEN_LOOP_DESCENT) - just for trackingValid value
     double ms_since_mocap = ((double)rc_nanos_since_epoch() - (double)state_estimate.xbee_time_received_ns) / 1e6;
-    if (ms_since_mocap >= settings.mocap_dropout_timeout_ms) 
+    if (ms_since_mocap >= settings.mocap_dropout_timeout_ms)
     {
         xbeeMsg.trackingValid = 0;
     }
@@ -243,37 +255,39 @@ void __copy_xbee_msg(unsigned char* dataPacket)
 {
     switch (settings.xbee_packet_version)
     {
-        case 1:
-            // printf("Copying XBee Message V1!\n");
-            memcpy(&xbeeMsg, dataPacket, opti_data_length);
-            break;
-        case 2:
-            // printf("Copying XBee Message V2!\n");
-            memcpy(&xbeeMsg_v2, dataPacket, opti_data_length);
-            xbeeMsg.x = xbeeMsg_v2.x;
-            xbeeMsg.y = xbeeMsg_v2.y;
-            xbeeMsg.z = xbeeMsg_v2.z;
-            xbeeMsg.qz = sin(xbeeMsg_v2.yaw/2);
-            xbeeMsg.qw = cos(xbeeMsg_v2.yaw/2);
-            xbeeMsg.trackingValid = 1;
-            break;
+    case 1:
+        // printf("Copying XBee Message V1!\n");
+        memcpy(&xbeeMsg, dataPacket, opti_data_length);
+        break;
+    case 2:
+        // printf("Copying XBee Message V2!\n");
+        memcpy(&xbeeMsg_v2, dataPacket, opti_data_length);
+        xbeeMsg.x = xbeeMsg_v2.x;
+        xbeeMsg.y = xbeeMsg_v2.y;
+        xbeeMsg.z = xbeeMsg_v2.z;
+        xbeeMsg.qz = sin(xbeeMsg_v2.yaw / 2);
+        xbeeMsg.qw = cos(xbeeMsg_v2.yaw / 2);
+        xbeeMsg.trackingValid = 1;
+        break;
 
-        case 3:
-            // printf("Copying XBee Message V3!\n");
-            memcpy(&xbeeMsg_v3, dataPacket, opti_data_length);
-            xbeeMsg.x = xbeeMsg_v3.x;
-            xbeeMsg.y = xbeeMsg_v3.y;
-            xbeeMsg.z = xbeeMsg_v3.z;
-            xbeeMsg.qx = xbeeMsg_v3.qx;
-            xbeeMsg.qy = xbeeMsg_v3.qy;
-            xbeeMsg.qz = xbeeMsg_v3.qz;
-            xbeeMsg.qw = xbeeMsg_v3.qw;
-            xbeeMsg.trackingValid = 1;
-            break;
-        default:
-            break;
+    case 3:
+        // printf("Copying XBee Message V3!\n");
+        memcpy(&xbeeMsg_v3, dataPacket, opti_data_length);
+        xbeeMsg.x = xbeeMsg_v3.x;
+        xbeeMsg.y = xbeeMsg_v3.y;
+        xbeeMsg.z = xbeeMsg_v3.z;
+        xbeeMsg.qx = xbeeMsg_v3.qx;
+        xbeeMsg.qy = xbeeMsg_v3.qy;
+        xbeeMsg.qz = xbeeMsg_v3.qz;
+        xbeeMsg.qw = xbeeMsg_v3.qw;
+        xbeeMsg.trackingValid = 1;
+        break;
+    default:
+        break;
     }
-                    
+
+    delta_send_data();
+
     return;
 }
 
@@ -283,6 +297,7 @@ void XBEE_printData()
     // Print to terminal
     printf("\r");
     // Time
+    /*
     if (xbeeMsg.time < 1000000)
         printf("   %u |", xbeeMsg.time);
     else if (xbeeMsg.time < 10000000)
@@ -291,6 +306,9 @@ void XBEE_printData()
         printf(" %u |", xbeeMsg.time);
     else
         printf("%u |", xbeeMsg.time);
+    */
+
+    printf("      %u |", xbeeMsg_v3.id);
 
     // XYZ
     if (xbeeMsg.x < 0)
@@ -330,10 +348,11 @@ void XBEE_printData()
     fflush(stdout);
 }
 
-void __diff_function(rc_ringbuf_t *x_buffer, rc_ringbuf_t *y_buffer, rc_ringbuf_t *z_buffer) {
+void __diff_function(rc_ringbuf_t* x_buffer, rc_ringbuf_t* y_buffer, rc_ringbuf_t* z_buffer)
+{
     thistime = rc_nanos_since_epoch();
-    xbee_dt = (float) (thistime - lastime);
-    xbee_dt = xbee_dt / (pow(10,9));
+    xbee_dt = (float)(thistime - lastime);
+    xbee_dt = xbee_dt / (pow(10, 9));
 
     prev_x_velocity = __diff_function_helper(x_buffer, prev_x_velocity, xbee_dt);
     prev_y_velocity = __diff_function_helper(y_buffer, prev_y_velocity, xbee_dt);
@@ -345,7 +364,7 @@ void __diff_function(rc_ringbuf_t *x_buffer, rc_ringbuf_t *y_buffer, rc_ringbuf_
     lastime = thistime;
 }
 
-float __diff_function_helper(rc_ringbuf_t *buffer, float prev_velocity, float dt)
+float __diff_function_helper(rc_ringbuf_t* buffer, float prev_velocity, float dt)
 {
     float current = rc_ringbuf_get_value(buffer, 0);
     float back1 = rc_ringbuf_get_value(buffer, 1);
@@ -357,9 +376,9 @@ float __diff_function_helper(rc_ringbuf_t *buffer, float prev_velocity, float dt
     // }
     // return answer / dt;
 
-    float current_velocity = (-back1 + current)/(dt);
-    current_velocity = ((1-ALPHA_CUTOFF)*current_velocity 
-            + ALPHA_CUTOFF*(prev_velocity));
+    float current_velocity = (-back1 + current) / (dt);
+    current_velocity = ((1 - ALPHA_CUTOFF) * current_velocity
+        + ALPHA_CUTOFF * (prev_velocity));
 
     return (current_velocity);
 }

@@ -16,9 +16,12 @@
 #include <rc/math/algebra.h>
 #include <rc/math/vector.h>
 
-/**
- * @brief       Possition and orientation data sent/received from xbee (v1)
- */
+#define DRONE_ID 1
+#define DELTA_ARM_ID 2
+
+ /**
+  * @brief       Possition and orientation data sent/received from xbee (v1)
+  */
 typedef struct __attribute__((packed)) xbee_packet_v1_t
 {
     uint32_t time;  ///< Unique id for the rigid body being described
@@ -49,8 +52,9 @@ typedef struct __attribute__((packed)) xbee_packet_v2_t
 } xbee_packet_v2_t;
 
 // v3 XBee Packet
-typedef struct __attribute__((packed)) xbee_packet_v3_t {
-    uint32_t time;         ///< Unique id for the rigid body being described
+typedef struct __attribute__((packed)) xbee_packet_v3_t
+{
+    uint32_t id;           ///< Unique id for the rigid body being described
     float x;               ///< x-position in the Optitrack frame
     float y;               ///< y-position in the Optitrack frame
     float z;               ///< z-position in the Optitrack frame
@@ -59,7 +63,7 @@ typedef struct __attribute__((packed)) xbee_packet_v3_t {
     float qz;              ///< qz of quaternion
     float qw;              ///< qw of quaternion
     int8_t trackingValid;  // (bool) of whether or not tracking was valid (0 or 1)
-    int8_t state;          ///< state
+    int16_t state;          ///< state
     float x_d;             ///< Desired X Position
     float y_d;             ///< Desired Y Position
     float z_d;             ///< Desired Z Position
@@ -79,7 +83,7 @@ typedef xbee_packet_v1_t xbee_packet_t;
 #define OPTI_DATA_LENGTH_V3 sizeof(xbee_packet_v3_t)  ///< Actual Packet Being Sent
 #define OPTI_PACKET_LENGTH_V3 OPTI_DATA_LENGTH_V3 + OPTI_NUM_FRAMING_BYTES + OPTI_NUM_CHECKSUM_BYTES
 
-#define OPTI_MAX_PACKET_LENGTH OPTI_PACKET_LENGTH_V1
+#define OPTI_MAX_PACKET_LENGTH OPTI_PACKET_LENGTH_V3
 #define OPTI_START_BYTE1 0x81
 #define OPTI_START_BYTE2 0xA1
 #define MOCAP_DT_SEC .01
@@ -102,7 +106,7 @@ extern float xbee_dt;
  *
  * @return      0 on success, -1 on failure
  */
-int XBEE_init(const char *xbee_port);
+int XBEE_init(const char* xbee_port);
 
 /**
  * @brief       Read message recieved from XBee
@@ -121,9 +125,9 @@ void XBEE_printData();
 /**
  * @brief       Returns derivative estimate of buffer points
  */
-void __diff_function(rc_ringbuf_t *x_buffer, rc_ringbuf_t *y_buffer, rc_ringbuf_t *z_buffer);
+void __diff_function(rc_ringbuf_t* x_buffer, rc_ringbuf_t* y_buffer, rc_ringbuf_t* z_buffer);
 
-float __diff_function_helper(rc_ringbuf_t *buffer, float prev_velocity, float dt);
+float __diff_function_helper(rc_ringbuf_t* buffer, float prev_velocity, float dt);
 
 #endif /*__XBEE_RECEIVE__ */
 
