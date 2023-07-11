@@ -16,8 +16,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-extern int delta_active;
-
 /**
  * @brief List of possible states for the state machine. States can be added as needed for new
  * functionality.
@@ -47,6 +45,7 @@ typedef enum sm_alphabet
     ENTER_SM_LOITER,
     ENTER_DELTA_LOITER,
     ENTER_NAILING,
+    ENTER_DELTA_LOITER,
     ENTER_RETURN,
     NO_EVENT,
 } sm_alphabet;

@@ -10,6 +10,7 @@ main() {
 	
 	ssh-keyscan -H $DEST1 >> $HOME/.ssh/known_hosts
 	ssh-keyscan -H $DEST2 >> $HOME/.ssh/known_hosts
+
 }
 
 main "$@"
