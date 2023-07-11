@@ -2,8 +2,8 @@
  * @file state_machine.c
  */
 
-// NOTE: All functionality for LOITER will be added at a later time if at all.
-// LOITER was not used much in a previous version of this project
+ // NOTE: All functionality for LOITER will be added at a later time if at all.
+ // LOITER was not used much in a previous version of this project
 
 #include <rc/time.h>
 #include <setpoint_manager.h>
@@ -14,12 +14,13 @@
 
 int delta_active = false;
 
-static const char* sm_alph_strings[] = {
+static const char* sm_alph_strings[ ] = {
     "ENTER_STANDBY",
     "ENTER_TAKEOFF",
     "ENTER_GUIDED",
     "ENTER_LANDING",
     "ENTER_SM_LOITER",
+    "ENTER_DELTA_LOITER",
     "ENTER_NAILING",
     "ENTER_RETURN",
     "NO_EVENT",
@@ -73,215 +74,215 @@ void sm_transition(state_machine_t* sm, sm_alphabet input)
         /** STANDBY: Assumes vehicle is on the ground and waiting to take off.
          * Valid Transitions: STANDBY, TAKEOFF
          */
-        case STANDBY:
-            switch (input)
-            {
-                case ENTER_STANDBY:
-                    break;
-
-                case ENTER_TAKEOFF:
-                    sm->current_state = TAKEOFF;
-                    sm->changedState = true;
-                    break;
-
-                default:
-                    fprintf(stderr, "\nSTANDBY cannot transition with event %s\n",
-                        sm_alph_strings[input]);
-                    break;
-            }
+    case STANDBY:
+        switch (input)
+        {
+        case ENTER_STANDBY:
             break;
+
+        case ENTER_TAKEOFF:
+            sm->current_state = TAKEOFF;
+            sm->changedState = true;
+            break;
+
+        default:
+            fprintf(stderr, "\nSTANDBY cannot transition with event %s\n",
+                sm_alph_strings[input]);
+            break;
+        }
+        break;
 
         /** TAKEOFF: Assumes vehicle is on the ground. Parses through waypoints to get from
          * ground into the air Valid Transitions: TAKEOFF, GUIDED, LANDING, LOITER, NAILING,
          * RETURN
          */
-        case TAKEOFF:
+    case TAKEOFF:
 
-            // Actions associated with this state
-            if (sm->changedState)
-            {
-                // Load new waypoint file
-                __build_waypoit_filename(
-                    waypoint_filename, settings.wp_folder, settings.wp_takeoff_filename);
+        // Actions associated with this state
+        if (sm->changedState)
+        {
+            // Load new waypoint file
+            __build_waypoit_filename(
+                waypoint_filename, settings.wp_folder, settings.wp_takeoff_filename);
 
-                set_new_path(waypoint_filename);
-                sm->changedState = false;
-            }
+            set_new_path(waypoint_filename);
+            sm->changedState = false;
+        }
 
-            // State transition
-            switch (input)
-            {
-                case ENTER_TAKEOFF:
-                    break;
-
-                case ENTER_STANDBY:
-                    sm->current_state = STANDBY;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_GUIDED:
-                    sm->current_state = GUIDED;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_LANDING:
-                    sm->current_state = LANDING;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_SM_LOITER:
-                    sm->current_state = SM_LOITER;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_NAILING:
-                    sm->current_state = NAILING;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_RETURN:
-                    sm->current_state = RETURN;
-                    sm->changedState = true;
-                    break;
-
-                default:
-                    fprintf(stderr, "\nTAKEOFF cannot transition with event %s\n",
-                        sm_alph_strings[input]);
-                    break;
-            }
+        // State transition
+        switch (input)
+        {
+        case ENTER_TAKEOFF:
             break;
+
+        case ENTER_STANDBY:
+            sm->current_state = STANDBY;
+            sm->changedState = true;
+            break;
+
+        case ENTER_GUIDED:
+            sm->current_state = GUIDED;
+            sm->changedState = true;
+            break;
+
+        case ENTER_LANDING:
+            sm->current_state = LANDING;
+            sm->changedState = true;
+            break;
+
+        case ENTER_SM_LOITER:
+            sm->current_state = SM_LOITER;
+            sm->changedState = true;
+            break;
+
+        case ENTER_NAILING:
+            sm->current_state = NAILING;
+            sm->changedState = true;
+            break;
+
+        case ENTER_RETURN:
+            sm->current_state = RETURN;
+            sm->changedState = true;
+            break;
+
+        default:
+            fprintf(stderr, "\nTAKEOFF cannot transition with event %s\n",
+                sm_alph_strings[input]);
+            break;
+        }
+        break;
 
         /** GUIDED: Assumes vehicle is in the air. Parses through waypoints of desried
          * trajectory. Valid Transitions: GUIDED, LANDING, LOITER, NAILING, RETURN
          */
-        case GUIDED:
-            // Actions associated with this state
-            if (sm->changedState)
-            {
-                __build_waypoit_filename(
-                    waypoint_filename, settings.wp_folder, settings.wp_guided_filename);
+    case GUIDED:
+        // Actions associated with this state
+        if (sm->changedState)
+        {
+            __build_waypoit_filename(
+                waypoint_filename, settings.wp_folder, settings.wp_guided_filename);
 
-                set_new_path(waypoint_filename);
-                sm->changedState = false;
-            }
+            set_new_path(waypoint_filename);
+            sm->changedState = false;
+        }
 
-            // State transition
-            switch (input)
-            {
-                case ENTER_GUIDED:
-                    break;
-
-                case ENTER_STANDBY:
-                    sm->current_state = STANDBY;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_LANDING:
-                    sm->current_state = LANDING;
-                    sm->changedState = true;
-                    // TODO: Load waypoints from LANDING file
-                    break;
-
-                case ENTER_SM_LOITER:
-                    sm->current_state = SM_LOITER;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_NAILING:
-                    sm->current_state = NAILING;
-                    sm->changedState = true;
-                    // TODO: Load waypoints from NAILING file
-                    break;
-
-                case ENTER_RETURN:
-                    sm->current_state = RETURN;
-                    sm->changedState = true;
-                    // TODO: Load waypoints from RETURN file
-                    break;
-
-                default:
-                    fprintf(stderr, "\nGUIDED cannot transition with event %s\n",
-                        sm_alph_strings[input]);
-                    break;
-            }
+        // State transition
+        switch (input)
+        {
+        case ENTER_GUIDED:
             break;
+
+        case ENTER_STANDBY:
+            sm->current_state = STANDBY;
+            sm->changedState = true;
+            break;
+
+        case ENTER_LANDING:
+            sm->current_state = LANDING;
+            sm->changedState = true;
+            // TODO: Load waypoints from LANDING file
+            break;
+
+        case ENTER_SM_LOITER:
+            sm->current_state = SM_LOITER;
+            sm->changedState = true;
+            break;
+
+        case ENTER_NAILING:
+            sm->current_state = NAILING;
+            sm->changedState = true;
+            // TODO: Load waypoints from NAILING file
+            break;
+
+        case ENTER_RETURN:
+            sm->current_state = RETURN;
+            sm->changedState = true;
+            // TODO: Load waypoints from RETURN file
+            break;
+
+        default:
+            fprintf(stderr, "\nGUIDED cannot transition with event %s\n",
+                sm_alph_strings[input]);
+            break;
+        }
+        break;
 
         /** LANDING: Assumes vehicle is in the air. Parses through waypoints to get from the air
          * to the ground Valid Transitions: STANDBY, LANDING, LOITER
          */
-        case LANDING:
-            // Actions associated with this state
-            if (sm->changedState)
-            {
-                __build_waypoit_filename(
-                    waypoint_filename, settings.wp_folder, settings.wp_landing_filename);
+    case LANDING:
+        // Actions associated with this state
+        if (sm->changedState)
+        {
+            __build_waypoit_filename(
+                waypoint_filename, settings.wp_folder, settings.wp_landing_filename);
 
-                set_new_path(waypoint_filename);
-                sm->changedState = false;
-            }
+            set_new_path(waypoint_filename);
+            sm->changedState = false;
+        }
 
-            // State transition
-            switch (input)
-            {
-                case ENTER_STANDBY:
-                    sm->current_state = STANDBY;
-                    sm->changedState = true;
-                    break;
-
-                case ENTER_LANDING:
-
-                    break;
-
-                case ENTER_SM_LOITER:
-                    sm->current_state = SM_LOITER;
-                    sm->changedState = true;
-                    break;
-
-                default:
-                    fprintf(stderr, "\nLANDING cannot transition with event %s\n",
-                        sm_alph_strings[input]);
-                    break;
-            }
+        // State transition
+        switch (input)
+        {
+        case ENTER_STANDBY:
+            sm->current_state = STANDBY;
+            sm->changedState = true;
             break;
+
+        case ENTER_LANDING:
+
+            break;
+
+        case ENTER_SM_LOITER:
+            sm->current_state = SM_LOITER;
+            sm->changedState = true;
+            break;
+
+        default:
+            fprintf(stderr, "\nLANDING cannot transition with event %s\n",
+                sm_alph_strings[input]);
+            break;
+        }
+        break;
 
         // States that have not yet been implemented
-        case SM_LOITER:
-            fprintf(stderr,
-                "\nSM_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-                sm_alph_strings[input]);
-            sm->current_state = STANDBY;
-            sm->changedState = true;
-            break;
-        case NAILING:
-            fprintf(stderr,
-                "\nNAILING mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-                sm_alph_strings[input]);
-            sm->current_state = STANDBY;
-            sm->changedState = true;
-            break;
-        case DELTA_LOITER:
-            delta_active = true;
-            if(sm->changedState)
-            {
-                __build_waypoit_filename(
-                    waypoint_filename, settings.wp_folder, settings.wp_loiter_filename);
+    case SM_LOITER:
+        fprintf(stderr,
+            "\nSM_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            sm_alph_strings[input]);
+        sm->current_state = STANDBY;
+        sm->changedState = true;
+        break;
+    case NAILING:
+        fprintf(stderr,
+            "\nNAILING mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            sm_alph_strings[input]);
+        sm->current_state = STANDBY;
+        sm->changedState = true;
+        break;
+    case DELTA_LOITER:
+        delta_active = true;
+        if (sm->changedState)
+        {
+            __build_waypoit_filename(
+                waypoint_filename, settings.wp_folder, settings.wp_loiter_filename);
 
-                set_new_path(waypoint_filename);
-                sm->changedState = false;
-            }
+            set_new_path(waypoint_filename);
+            sm->changedState = false;
+        }
 
-            fprintf(stderr,
-                "\nDELTA_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-                sm_alph_strings[input]);
-            sm->current_state = STANDBY;
-            sm->changedState = true;
-            break;
-        case RETURN:
-            fprintf(stderr,
-                "\nRETURN mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-                sm_alph_strings[input]);
-            sm->current_state = STANDBY;
-            sm->changedState = true;
-            break;
+        fprintf(stderr,
+            "\nDELTA_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            sm_alph_strings[input]);
+        sm->current_state = STANDBY;
+        sm->changedState = true;
+        break;
+    case RETURN:
+        fprintf(stderr,
+            "\nRETURN mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            sm_alph_strings[input]);
+        sm->current_state = STANDBY;
+        sm->changedState = true;
+        break;
     }
 }

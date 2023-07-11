@@ -56,10 +56,10 @@
 	"printf_u": false,
 	"printf_motors": false,
 	"printf_mode": false,
-	"printf_xbee": false,
+	"printf_xbee": true,
 	"printf_xbee_velocities": false,
 	"printf_tracking": true,
-	"printf_gps": true,
+	"printf_gps": false,
 	"printf_magnetom": false,
 	"printf_rm3100": false,
 	"printf_vl53l1x": false,
@@ -93,11 +93,11 @@
 	"wp_folder": "/home/debian/waypoints/",
 	"wp_takeoff_filename": "takeoff_waypoints.cfg",
 	"wp_guided_filename": "guided_waypoints.cfg",
-    "wp_loiter_filename": "loiter_waypoints.cfg",
+	"wp_loiter_filename": "loiter_waypoints.cfg",
 	"wp_landing_filename": "landing_waypoints.cfg",
 
 	"xbee_serial_port": "/dev/ttyS5",
-	"xbee_packet_version": 1,
+	"xbee_packet_version": 3,
 
 	"realsense_payload_serial_port": "/dev/ttyS1",
 

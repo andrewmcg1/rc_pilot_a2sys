@@ -45,6 +45,7 @@ typedef enum sm_alphabet
     ENTER_GUIDED,
     ENTER_LANDING,
     ENTER_SM_LOITER,
+    ENTER_DELTA_LOITER,
     ENTER_NAILING,
     ENTER_RETURN,
     NO_EVENT,

@@ -27,7 +27,7 @@
 static pthread_t printf_manager_thread;
 static int initialized = 0;
 
-const char* const colours[] = {KYEL, KCYN, KGRN, KMAG};
+const char* const colours[ ] = { KYEL, KCYN, KGRN, KMAG };
 const int num_colours = 4;  // length of above array
 int current_colour = 0;
 
@@ -94,11 +94,11 @@ static int __print_header()
     }
     if (settings.printf_xbee && settings.printf_xbee_velocities)
     {
-        printf("%s x_xb | y_xb | z_xb | xdot_xb | ydot_xb | zdot_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |", __next_colour());
+        printf("%s id_xb | x_xb | y_xb | z_xb | xdot_xb | ydot_xb | zdot_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |", __next_colour());
     }
     else if (settings.printf_xbee && !settings.printf_xbee_velocities)
     {
-        printf("%s x_xb | y_xb | z_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |", __next_colour());
+        printf("%s id_xb | x_xb | y_xb | z_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |", __next_colour());
     }
     if (settings.printf_gps)
     {
@@ -156,7 +156,7 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         __reset_colour();
 
         printf("\r");
-        
+
         if (settings.printf_arm)
         {
             if (fstate.arm_state == ARMED)
@@ -203,8 +203,8 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_setpoint)
         {
-            printf("%s%+5.2f|%+5.2f|%+5.2f|%+5.2f|%+5.2f|%+5.2f|", __next_colour(), 
-                setpoint.X, setpoint.Y, setpoint.Z, 
+            printf("%s%+5.2f|%+5.2f|%+5.2f|%+5.2f|%+5.2f|%+5.2f|", __next_colour(),
+                setpoint.X, setpoint.Y, setpoint.Z,
                 setpoint.roll, setpoint.pitch, setpoint.yaw);
         }
         if (settings.printf_u)
@@ -214,38 +214,39 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_xbee && settings.printf_xbee_velocities)
         {
-            printf("%s%+6.2f|%+6.2f|%+6.2f|%+9.2f|%+9.2f|%+9.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
-                xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, state_estimate.X_dot, state_estimate.Y_dot,
+            printf("%s %6.2d|%+6.2f|%+6.2f|%+6.2f|%+9.2f|%+9.2f|%+9.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
+                xbeeMsg_v3.id, xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, state_estimate.X_dot, state_estimate.Y_dot,
                 state_estimate.Z_dot, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
                 xbeeMsg.sm_event);
         }
         else if (settings.printf_xbee && !settings.printf_xbee_velocities)
         {
-            printf("%s%+6.2f|%+6.2f|%+6.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
-                xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
+            printf("%s %6.2d|%+6.2f|%+6.2f|%+6.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
+                xbeeMsg_v3.id, xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
                 xbeeMsg.sm_event);
         }
         if (settings.printf_gps)
         {
-            printf("%s%+7.2f|%+7.2f|%+7.2f|%7.2d|  %7.1d|", __next_colour(), 
+            printf("%s%+7.2f|%+7.2f|%+7.2f|%7.2d|  %7.1d|", __next_colour(),
                 gps_data.lla.lat, gps_data.lla.lon, gps_data.lla.alt, gps_data.fix, gps_data.gps_valid);
         }
         if (settings.printf_rm3100)
         {
             //If applying calibration, the print the calibrated values to terminal
             //Otherwise, print raw magnetometer values
-            if(settings.apply_rm3100_calibration)
+            if (settings.apply_rm3100_calibration)
             {
                 printf("%s%+8.3lf|%+8.3lf|%+8.3lf|%+8.3lf|", __next_colour(),
                     rm3100_data_extern.cal_mag[0], rm3100_data_extern.cal_mag[1], rm3100_data_extern.cal_mag[2],
-                    sqrt(pow(rm3100_data_extern.cal_mag[0], 2) + pow(rm3100_data_extern.cal_mag[1], 2) + pow(rm3100_data_extern.cal_mag[2], 2) )
-                  );
+                    sqrt(pow(rm3100_data_extern.cal_mag[0], 2) + pow(rm3100_data_extern.cal_mag[1], 2) + pow(rm3100_data_extern.cal_mag[2], 2))
+                );
             }
-            else{
+            else
+            {
                 printf("%s%+8.3lf|%+8.3lf|%+8.3lf|%+8.3lf|", __next_colour(),
                     rm3100_data_extern.mag[0], rm3100_data_extern.mag[1], rm3100_data_extern.mag[2],
-                    sqrt(pow(rm3100_data_extern.mag[0], 2) + pow(rm3100_data_extern.mag[1], 2) + pow(rm3100_data_extern.mag[2], 2) )
-                  );
+                    sqrt(pow(rm3100_data_extern.mag[0], 2) + pow(rm3100_data_extern.mag[1], 2) + pow(rm3100_data_extern.mag[2], 2))
+                );
             }
         }
         if (settings.printf_vl53l1x)
@@ -265,7 +266,7 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
             printf("%s%+7.2f|%+7.2f|%+7.2f|%+7.2f|", __next_colour(), state_estimate.mag[0],
                 state_estimate.mag[1], state_estimate.mag[2],
                 sqrt(pow(state_estimate.mag[0], 2) + pow(state_estimate.mag[1], 2) +
-                     pow(state_estimate.mag[2], 2)));
+                    pow(state_estimate.mag[2], 2)));
         }
         printf(KNRM);
         if (settings.printf_mode)
@@ -286,7 +287,7 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
 int printf_init()
 {
     if (rc_pthread_create(&printf_manager_thread, __printf_manager_func, NULL, SCHED_FIFO,
-            PRINTF_MANAGER_PRI) == -1)
+        PRINTF_MANAGER_PRI) == -1)
     {
         fprintf(stderr, "ERROR in start_printf_manager, failed to start thread\n");
         return -1;
@@ -315,44 +316,44 @@ int print_flight_mode(flight_mode_t mode)
 {
     switch (mode)
     {
-        case TEST_BENCH_4DOF:
-            printf("%sTEST_BENCH_4DOF%s", KYEL, KNRM);
-            return 0;
-        case TEST_BENCH_6DOF:
-            printf("%sTEST_BENCH_6DOF%s", KYEL, KNRM);
-            return 0;
-        case RP_TEST_DIRECT_THROTTLE:
-            printf("%sRP_TEST_DIR_THR%s", KYEL, KNRM);
-            return 0;
-        case MANUAL:
-            printf("%sMANUAL         %s", KCYN, KNRM);
-            return 0;
-        case ALT_HOLD:
-            printf("%sALT_HOLD       %s", KBLU, KNRM);
-            return 0;
-        case AUTONOMOUS:
-            printf("%sAUTONOMOUS     %s", KBLU, KNRM);
-            return 0;
-        case OPEN_LOOP_DESCENT:
-            printf("%sOPN_LOOP_DESCNT%s", KBLU, KNRM);
-            return 0;
-        case LOITER:
-            printf("%sLOITER         %s", KBLU, KNRM);
-            return 0;
-        case LOITER_RSP:
-            printf("%sLOITER_RSP     %s", KBLU, KNRM);
-            return 0;
-        case ACRO:
-            printf("%sACRO           %s", KBLU, KNRM);
-            return 0;
-        case TEST_BENCH_DIRECT_Z_ACC:
-            printf("%sTB_DIRECT_Z_ACC%s", KBLU, KNRM);
-            return 0;
-        case TEST_BENCH_DIRECT_Z_VEL:
-            printf("%sTB_DIRECT_Z_VEL%s", KBLU, KNRM);
-            return 0;
-        default:
-            fprintf(stderr, "ERROR in print_flight_mode, unknown flight mode\n");
-            return -1;
+    case TEST_BENCH_4DOF:
+        printf("%sTEST_BENCH_4DOF%s", KYEL, KNRM);
+        return 0;
+    case TEST_BENCH_6DOF:
+        printf("%sTEST_BENCH_6DOF%s", KYEL, KNRM);
+        return 0;
+    case RP_TEST_DIRECT_THROTTLE:
+        printf("%sRP_TEST_DIR_THR%s", KYEL, KNRM);
+        return 0;
+    case MANUAL:
+        printf("%sMANUAL         %s", KCYN, KNRM);
+        return 0;
+    case ALT_HOLD:
+        printf("%sALT_HOLD       %s", KBLU, KNRM);
+        return 0;
+    case AUTONOMOUS:
+        printf("%sAUTONOMOUS     %s", KBLU, KNRM);
+        return 0;
+    case OPEN_LOOP_DESCENT:
+        printf("%sOPN_LOOP_DESCNT%s", KBLU, KNRM);
+        return 0;
+    case LOITER:
+        printf("%sLOITER         %s", KBLU, KNRM);
+        return 0;
+    case LOITER_RSP:
+        printf("%sLOITER_RSP     %s", KBLU, KNRM);
+        return 0;
+    case ACRO:
+        printf("%sACRO           %s", KBLU, KNRM);
+        return 0;
+    case TEST_BENCH_DIRECT_Z_ACC:
+        printf("%sTB_DIRECT_Z_ACC%s", KBLU, KNRM);
+        return 0;
+    case TEST_BENCH_DIRECT_Z_VEL:
+        printf("%sTB_DIRECT_Z_VEL%s", KBLU, KNRM);
+        return 0;
+    default:
+        fprintf(stderr, "ERROR in print_flight_mode, unknown flight mode\n");
+        return -1;
     }
 }

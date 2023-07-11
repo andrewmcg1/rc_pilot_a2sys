@@ -10,10 +10,10 @@
 #ifndef __RC_PILOT_DEFS__
 #define __RC_PILOT_DEFS__
 
-/**
- * @brief   ARMED or DISARMED to indicate if the feedback controller is
- * allowed to output to the motors
- */
+ /**
+  * @brief   ARMED or DISARMED to indicate if the feedback controller is
+  * allowed to output to the motors
+  */
 typedef enum arm_state_t
 {
     DISARMED,
@@ -97,7 +97,7 @@ typedef enum fail_state_t
 #define MAX_THRUST_COMPONENT -0.05
 #define MIN_THRUST_COMPONENT -0.65
 
-// Files
+ // Files
 #define LOG_DIR "/home/debian/rc_pilot_logs/"
 
 // for future modes, not used yet

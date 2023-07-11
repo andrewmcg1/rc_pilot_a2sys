@@ -42,19 +42,20 @@
 #include <benchmark.h>
 #include <ntp_read.h>
 #include <realsense_payload_receive.h>
+#include <delta_arm.h>
 
-/**
- *  @brief      Standard exit for initialization failures
- */
+ /**
+  *  @brief      Standard exit for initialization failures
+  */
 #define FAIL(str)                       \
     fprintf(stderr, str);               \
     rc_led_set(RC_LED_GREEN, 0);        \
     rc_led_blink(RC_LED_RED, 8.0, 2.0); \
     return -1;
 
-/**
- *  @brief      Prints main function commond line ussage (arguments)
- */
+  /**
+   *  @brief      Prints main function commond line ussage (arguments)
+   */
 void print_usage()
 {
     printf("\n");
@@ -125,87 +126,88 @@ static void __imu_isr(void)
 {
     // record time of imu interupt
     state_estimate.imu_time_ns = rc_nanos_since_epoch();
-    if(settings.log_benchmark) benchmark_timers.tIMU = rc_nanos_since_epoch();
-    
+    if (settings.log_benchmark) benchmark_timers.tIMU = rc_nanos_since_epoch();
+
     //Get XBee data
     XBEE_getData();
-    if(settings.log_benchmark) benchmark_timers.tXBEE = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tXBEE = rc_nanos_since_epoch();
 
     // Get Realsense Payload Data
-    switch (REALSENSE_getData()) {
-        case 0:
-            // No New Message
-            break;
-        case 1:
-            // New Pose Update Message
-            break;
-        case 2:
-            // New Landing Command Message
-            plan_rsp_landing();
-            break;
-        default:
-            break;
+    switch (REALSENSE_getData())
+    {
+    case 0:
+        // No New Message
+        break;
+    case 1:
+        // New Pose Update Message
+        break;
+    case 2:
+        // New Landing Command Message
+        plan_rsp_landing();
+        break;
+    default:
+        break;
     }
 
     //Update the state machine
     sm_transition(&waypoint_state_machine, xbeeMsg.sm_event);
-    if(settings.log_benchmark) benchmark_timers.tSM = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tSM = rc_nanos_since_epoch();
 
     //Read from GPS sensor
     gps_getData();
-    if(settings.log_benchmark) benchmark_timers.tGPS = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tGPS = rc_nanos_since_epoch();
 
     //Read from PNI RM3100 Magnetometer (skip if readings aren't used)
-    if((settings.printf_rm3100 || settings.log_rm3100))
-    {   
-        bool read_mag = false; 
+    if ((settings.printf_rm3100 || settings.log_rm3100))
+    {
+        bool read_mag = false;
 
         // If we want 200Hz or faster, then just read from the sensor each time
         if (settings.rm3100_time_between_meas_s <= 0.005)
         {
             read_mag = true;
-        }   
+        }
         // Otherwise, check if enough time has elapsed to read from the sensor
         else
         {
             uint64_t mag_read_elapsed_time = rc_nanos_since_epoch() - rm3100_data_extern.timestamp;
-            double seconds_since_mag_read = ((double) mag_read_elapsed_time)/1e9;
+            double seconds_since_mag_read = ((double)mag_read_elapsed_time) / 1e9;
 
             if (seconds_since_mag_read >= settings.rm3100_time_between_meas_s)
                 read_mag = true;
         }
 
         // Read from the sensor this iteration if enough time has passed
-        if(read_mag)
+        if (read_mag)
         {
             rm3100_read_meas(&rm3100_data_extern);
-            if(settings.apply_rm3100_calibration)
+            if (settings.apply_rm3100_calibration)
                 rm3100_apply_springmann_calibration(rm3100_calibration_params, rm3100_data_extern.mag, rm3100_data_extern.cal_mag);
         }
-    }    
-    if(settings.log_benchmark) benchmark_timers.tPNI = rc_nanos_since_epoch();
+    }
+    if (settings.log_benchmark) benchmark_timers.tPNI = rc_nanos_since_epoch();
 
     //Navigation
     state_estimator_march();
-    if(settings.log_benchmark) benchmark_timers.tNAV = rc_nanos_since_epoch();
-    
+    if (settings.log_benchmark) benchmark_timers.tNAV = rc_nanos_since_epoch();
+
     //Guidance
     setpoint_manager_update();
-    if(settings.log_benchmark) benchmark_timers.tGUI = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tGUI = rc_nanos_since_epoch();
 
     //Control
     feedback_march();
-    if(settings.log_benchmark) benchmark_timers.tCTR = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tCTR = rc_nanos_since_epoch();
 
     //Save data to log file
     if (settings.enable_logging) log_manager_add_new();
-    if(settings.log_benchmark) benchmark_timers.tLOG = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tLOG = rc_nanos_since_epoch();
 
     //Currently, this only reads from the BMP pressure sensor
     state_estimator_jobs_after_feedback();
 
     //Read from PNI VL53L1X Distance Sensor (skip if readings aren't used)
-    if((settings.printf_vl53l1x || settings.log_vl53l1x))
+    if ((settings.printf_vl53l1x || settings.log_vl53l1x))
     {
         bool read_alt = false;
 
@@ -213,30 +215,31 @@ static void __imu_isr(void)
         if (settings.vl53l1x_time_between_meas_s <= 0.005)
         {
             read_alt = true;
-        }   
+        }
         // Otherwise, check if enough time has elapsed to read from the sensor
         else
         {
             uint64_t alt_read_elapsed_time = rc_nanos_since_epoch() - vl53l1_data_extern.timestamp;
-            double seconds_since_alt_read = ((double) alt_read_elapsed_time)/1e9;
+            double seconds_since_alt_read = ((double)alt_read_elapsed_time) / 1e9;
 
-            if (seconds_since_alt_read >= settings.vl53l1x_time_between_meas_s){
+            if (seconds_since_alt_read >= settings.vl53l1x_time_between_meas_s)
+            {
                 read_alt = true;
             }
         }
 
         // Read from the sensor this iteration if enough time has passed
-        if(read_alt)
+        if (read_alt)
         {
             VL53L1X_GetDistance(&vl53l1_device_extern, &vl53l1_data_extern.distance_raw);
 
-            vl53l1_data_extern.distance_m = 
-                (double) vl53l1_data_extern.distance_raw / 1000.0;
+            vl53l1_data_extern.distance_m =
+                (double)vl53l1_data_extern.distance_raw / 1000.0;
 
             vl53l1_data_extern.timestamp = rc_nanos_since_epoch();
-        } 
+        }
     }
-    if(settings.log_benchmark) benchmark_timers.tIMU_END = rc_nanos_since_epoch();
+    if (settings.log_benchmark) benchmark_timers.tIMU_END = rc_nanos_since_epoch();
 }
 
 /**
@@ -245,7 +248,7 @@ static void __imu_isr(void)
  *
  * @return     0 on success, -1 on failure
  */
-int main(int argc, char* argv[])
+int main(int argc, char* argv[ ])
 {
     ntpCounter = NTP_COUNTER_THRESH; //Start here so that we check offset first trip through imu_isr()
 
@@ -259,20 +262,20 @@ int main(int argc, char* argv[])
         switch (c)
         {
             // settings file option
-            case 's':
-                settings_file_path = optarg;
-                printf("User specified settings file:\n%s\n", settings_file_path);
-                break;
+        case 's':
+            settings_file_path = optarg;
+            printf("User specified settings file:\n%s\n", settings_file_path);
+            break;
 
             // help mode
-            case 'h':
-                print_usage();
-                return 0;
+        case 'h':
+            print_usage();
+            return 0;
 
-            default:
-                printf("\nInvalid Argument \n");
-                print_usage();
-                return -1;
+        default:
+            printf("\nInvalid Argument \n");
+            print_usage();
+            return -1;
         }
     }
 
@@ -420,6 +423,11 @@ int main(int argc, char* argv[])
         FAIL("ERROR: failed to init xbee serial link")
     }
 
+    if (delta_init() == -1)
+    {
+        FAIL("ERROR: failed to initialize delta arm communication")
+    }
+
     // set up Realsense Payload serial link
     printf("initializing realsense payload serial link:%s.\n", settings.realsense_payload_serial_port);
     if (REALSENSE_init(settings.realsense_payload_serial_port) < 0)
@@ -434,26 +442,26 @@ int main(int argc, char* argv[])
     }
 
     //Only initialize PNI RM3100 if we're trying to log or print rm3100 data
-    if( (settings.printf_rm3100 || settings.log_rm3100))
+    if ((settings.printf_rm3100 || settings.log_rm3100))
     {
         pni_rm3100_config_t pni_config_params = rm3100_default_config();
-        switch(settings.rm3100_i2c_addr)
+        switch (settings.rm3100_i2c_addr)
         {
-            case 0:
-                pni_config_params.i2c_addr = RM_3100_I2C_ADDR_LL;
-                break;
-            case 1:
-                pni_config_params.i2c_addr = RM_3100_I2C_ADDR_LH;
-                break;
-            case 2:
-                pni_config_params.i2c_addr = RM_3100_I2C_ADDR_HL;
-                break;
-            case 3:
-                pni_config_params.i2c_addr = RM_3100_I2C_ADDR_HH;
-                break;
-            default:
-                FAIL("ERROR: 'rm3100_i2c_addr' must be 0 (LL), 1 (LH), 2 (HL), or 3 (HH)");
-                break;
+        case 0:
+            pni_config_params.i2c_addr = RM_3100_I2C_ADDR_LL;
+            break;
+        case 1:
+            pni_config_params.i2c_addr = RM_3100_I2C_ADDR_LH;
+            break;
+        case 2:
+            pni_config_params.i2c_addr = RM_3100_I2C_ADDR_HL;
+            break;
+        case 3:
+            pni_config_params.i2c_addr = RM_3100_I2C_ADDR_HH;
+            break;
+        default:
+            FAIL("ERROR: 'rm3100_i2c_addr' must be 0 (LL), 1 (LH), 2 (HL), or 3 (HH)");
+            break;
         }
         pni_config_params.x_ccr = settings.rm3100_CCR_value;
         pni_config_params.y_ccr = settings.rm3100_CCR_value;
@@ -464,9 +472,9 @@ int main(int argc, char* argv[])
             FAIL("ERROR: failed to init RM3100 Magnetometer");
         }
 
-        if(settings.apply_rm3100_calibration)
+        if (settings.apply_rm3100_calibration)
         {
-            if(rm3100_load_springmann_calibration_params(settings.rm3100_calibration_filename, rm3100_calibration_params))
+            if (rm3100_load_springmann_calibration_params(settings.rm3100_calibration_filename, rm3100_calibration_params))
             {
                 FAIL("ERROR: Could not load rm3100 calibration parameters from file 'rm3100_calibration_filename'.");
             }
@@ -474,7 +482,7 @@ int main(int argc, char* argv[])
     }
 
     // Only initialize the VL53L1X laser range finder if we will log or print its data
-    if( (settings.printf_vl53l1x || settings.log_vl53l1x))
+    if ((settings.printf_vl53l1x || settings.log_vl53l1x))
     {
         uint8_t addr = VL53L1X_DEFAULT_DEVICE_ADDRESS;
         uint8_t i2cbus = 1;
@@ -508,7 +516,7 @@ int main(int argc, char* argv[])
         // TB dictates the duration of the spent by the sensor for each measurement
         // Larger TB reduces variance between measurements, but forces lower sampling rates
         // Valid inputs  are {15, 20, 33, 50, 100, 200, 500}ms
-        
+
         if (VL53L1X_SetTimingBudgetInMs(&vl53l1_device_extern, settings.vl53l1x_timing_budget_ms) != 0)
         {
             printf("Timing Budget is  %dms \n", settings.vl53l1x_timing_budget_ms);
@@ -519,11 +527,11 @@ int main(int argc, char* argv[])
         // Input is desired inter-measurement timing in ms
         // Inter-measurement delay sets the amount of the between the _start_ of subsequent distance measurements
         // This value must be greater than or equal to TB for things to work properly
-        uint16_t interMeasTiming_ms = (uint16_t) (settings.vl53l1x_time_between_meas_s * 1000);
-        if(interMeasTiming_ms < settings.vl53l1x_timing_budget_ms)
+        uint16_t interMeasTiming_ms = (uint16_t)(settings.vl53l1x_time_between_meas_s * 1000);
+        if (interMeasTiming_ms < settings.vl53l1x_timing_budget_ms)
         {
-            printf("vl53l1x WARNING: 'vl53l1x_time_between_meas' of %dms cannot be less than 'vl53l1x_timing_budget_ms' of %dms\n", 
-                    interMeasTiming_ms, settings.vl53l1x_timing_budget_ms);
+            printf("vl53l1x WARNING: 'vl53l1x_time_between_meas' of %dms cannot be less than 'vl53l1x_timing_budget_ms' of %dms\n",
+                interMeasTiming_ms, settings.vl53l1x_timing_budget_ms);
             printf("Assigning 'vl53l1x_time_between_meas' to %dms \n", settings.vl53l1x_timing_budget_ms);
 
             interMeasTiming_ms = settings.vl53l1x_timing_budget_ms;
@@ -535,17 +543,17 @@ int main(int argc, char* argv[])
             FAIL("ERROR SetInterMeasurementInMs: failed to init VL53L1X Distance Sensor\n");
         }
 
-         vl53l1_data_extern.timestamp = 0;
+        vl53l1_data_extern.timestamp = 0;
     }
 
     //Read NTP offset once at the start of the program
     ntp_data.ntp_offset_ms = NTP_ERR_NUM;
     ntp_data.ntp_time_updated_ns = 0;
     if (settings.log_ntp)
-    {   
+    {
         printf("reading initial NTP value...");
         double temp = get_ntp_offset();
-        if(temp == NTP_ERR_NUM)
+        if (temp == NTP_ERR_NUM)
         {
             FAIL("ERROR: Unable to read NTP offset. Ensure NTP server is running and 'ntpq -p' has reasonable outputs\n");
         }
@@ -553,7 +561,7 @@ int main(int argc, char* argv[])
         {
             ntp_data.ntp_offset_ms = temp;
             ntp_data.ntp_time_updated_ns = rc_nanos_since_epoch();
-        }        
+        }
         printf("offset = %lf ms\n", ntp_data.ntp_offset_ms);
         // rc_usleep(1000000);
     }
@@ -632,7 +640,7 @@ int main(int argc, char* argv[])
     if (settings.log_ntp)
     {
         double temp = get_ntp_offset();
-        if(temp == NTP_ERR_NUM)
+        if (temp == NTP_ERR_NUM)
         {
             fprintf(stderr, "WARNING: Could not obtain final NTP offset value");
         }
@@ -642,7 +650,7 @@ int main(int argc, char* argv[])
 
         if (settings.enable_logging) log_manager_add_new();
     }
-    
+
 
     // some of these, like printf_manager and log_manager, have cleanup
     // functions that can be called even if not being used. So just call all
@@ -656,7 +664,7 @@ int main(int argc, char* argv[])
     log_manager_cleanup();
     path_cleanup();
     VL53L1X_StopRanging(&vl53l1_device_extern);
-    
+
     // turn off red LED and blink green to say shut down was safe
     rc_led_set(RC_LED_RED, 0);
     rc_led_blink(RC_LED_GREEN, 8.0, 2.0);
