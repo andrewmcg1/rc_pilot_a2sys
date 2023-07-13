@@ -28,8 +28,7 @@ typedef enum sm_states
     LANDING = 3,
     SM_LOITER = 4,
     NAILING = 5,
-    DELTA_LOITER = 6,
-    RETURN = 7,
+    RETURN = 6,
 } sm_states;
 
 /**

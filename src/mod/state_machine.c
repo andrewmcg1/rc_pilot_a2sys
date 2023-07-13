@@ -20,7 +20,6 @@ static const char* sm_alph_strings[ ] = {
     "ENTER_GUIDED",
     "ENTER_LANDING",
     "ENTER_SM_LOITER",
-    "ENTER_DELTA_LOITER",
     "ENTER_NAILING",
     "ENTER_RETURN",
     "NO_EVENT",
@@ -247,20 +246,6 @@ void sm_transition(state_machine_t* sm, sm_alphabet input)
 
         // States that have not yet been implemented
     case SM_LOITER:
-        fprintf(stderr,
-            "\nSM_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-            sm_alph_strings[input]);
-        sm->current_state = STANDBY;
-        sm->changedState = true;
-        break;
-    case NAILING:
-        fprintf(stderr,
-            "\nNAILING mode not yet implemented. Switching state to STANDBY. Input: %s\n",
-            sm_alph_strings[input]);
-        sm->current_state = STANDBY;
-        sm->changedState = true;
-        break;
-    case DELTA_LOITER:
         delta_active = true;
         if (sm->changedState)
         {
@@ -272,7 +257,14 @@ void sm_transition(state_machine_t* sm, sm_alphabet input)
         }
 
         fprintf(stderr,
-            "\nDELTA_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            "\nSM_LOITER mode not yet implemented. Switching state to STANDBY. Input: %s\n",
+            sm_alph_strings[input]);
+        sm->current_state = STANDBY;
+        sm->changedState = true;
+        break;
+    case NAILING:
+        fprintf(stderr,
+            "\nNAILING mode not yet implemented. Switching state to STANDBY. Input: %s\n",
             sm_alph_strings[input]);
         sm->current_state = STANDBY;
         sm->changedState = true;
