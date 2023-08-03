@@ -52,7 +52,7 @@
 	"printf_position": true,
 	"printf_rpy": false,
 	"printf_sticks": false,
-	"printf_setpoint": true,
+	"printf_setpoint": false,
 	"printf_u": false,
 	"printf_motors": false,
 	"printf_mode": true,
@@ -93,11 +93,15 @@
 	"wp_folder": "/home/debian/waypoints/",
 	"wp_takeoff_filename": "takeoff_waypoints.cfg",
 	"wp_guided_filename": "guided_waypoints.cfg",
+    "wp_loiter_filename": "loiter_waypoints.cfg",
 	"wp_landing_filename": "landing_waypoints.cfg",
 
-    "xbee_serial_port": "/dev/ttyS5",
-    "xbee_packet_version": 1,
-    
+    "xbee_serial_port": "/dev/ttyUSB0",
+    "xbee_packet_version": 3,
+
+    "delta_arm_bus": 1,
+    "delta_arm_enable": true,
+
     "realsense_payload_serial_port": "/dev/ttyS1",
 
 	"gyro_lpf_timeConst_multiplier": 3.0,

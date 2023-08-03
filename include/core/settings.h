@@ -201,6 +201,12 @@ typedef struct settings_t
     int xbee_packet_version;
     ///@}
 
+    /** @name serial port that the delta arm is connected too*/
+    ///@{
+    int delta_arm_bus;
+    int delta_arm_enable;
+    ///@}
+
     /** @name Realsense Payload Settings */
     ///@{
     char realsense_payload_serial_port[50];

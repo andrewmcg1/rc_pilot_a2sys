@@ -828,6 +828,10 @@ int settings_load_from_file(const char* path)
     PARSE_STRING(xbee_serial_port)
     PARSE_INT(xbee_packet_version)
 
+    // DELTA ARM SERIAL PORT
+    PARSE_INT(delta_arm_bus)
+    PARSE_BOOL(delta_arm_enable)
+
     // REALSENSE PAYLOAD SERIAL PORT
     PARSE_STRING(realsense_payload_serial_port)
 

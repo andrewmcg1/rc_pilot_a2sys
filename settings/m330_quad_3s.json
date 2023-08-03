@@ -94,7 +94,7 @@
 	"wp_guided_filename": "guided_waypoints.cfg",
 	"wp_landing_filename": "landing_waypoints.cfg",
 
-    "xbee_serial_port": "/dev/ttyS5",
+    "xbee_serial_port": "/dev/ttyUSB0",
     "xbee_packet_version": 1,
     
     "realsense_payload_serial_port": "/dev/ttyS1",

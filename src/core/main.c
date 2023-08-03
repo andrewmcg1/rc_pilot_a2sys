@@ -311,6 +311,7 @@ int main(int argc, char* argv[ ])
         return -1;
     }
 
+/*
     // make sure IMU is calibrated
     if (!rc_mpu_is_gyro_calibrated())
     {
@@ -328,7 +329,7 @@ int main(int argc, char* argv[ ])
     {
         FAIL("ERROR: must calibrate DSM with rc_calibrate_dsm first\n")
     }
-
+*/
     // turn cpu freq to max for most consistent performance and lowest
     // latency servicing the IMU's interrupt service routine
     // this also serves as an initial check for root access which is needed
@@ -416,16 +417,18 @@ int main(int argc, char* argv[ ])
         FAIL("ERROR: failed to init state_estimator")
     }
 
-    // set up XBEE serial link
-    printf("initializing xbee serial link:%s.\n", settings.xbee_serial_port);
-    if (XBEE_init(settings.xbee_serial_port) < 0)
-    {
-        FAIL("ERROR: failed to init xbee serial link")
-    }
-
-    if (delta_init() == -1)
+    // set uo delta arm passthrough
+    printf("initializing delta arm on port: /dev/ttyO%d.\n", settings.delta_arm_bus);
+    if (delta_init(settings.delta_arm_bus, settings.xbee_serial_port, settings.delta_arm_enable) == -1)
     {
         FAIL("ERROR: failed to initialize delta arm communication")
+    }
+
+    // set up XBEE serial link
+    printf("initializing xbee serial link:%s.\n", settings.xbee_serial_port);
+    if (XBEE_init(settings.xbee_serial_port, settings.delta_arm_enable) < 0)
+    {
+        FAIL("ERROR: failed to init xbee serial link")
     }
 
     // set up Realsense Payload serial link
@@ -663,6 +666,7 @@ int main(int argc, char* argv[ ])
     printf_cleanup();
     log_manager_cleanup();
     path_cleanup();
+    delta_cleanup();
     VL53L1X_StopRanging(&vl53l1_device_extern);
 
     // turn off red LED and blink green to say shut down was safe

@@ -106,7 +106,7 @@ extern float xbee_dt;
  *
  * @return      0 on success, -1 on failure
  */
-int XBEE_init(const char* xbee_port);
+int XBEE_init(const char* xbee_port, int enabled);
 
 /**
  * @brief       Read message recieved from XBee
