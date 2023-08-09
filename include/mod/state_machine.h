@@ -16,10 +16,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/**
- * @brief List of possible states for the state machine. States can be added as needed for new
- * functionality.
- */
+ /**
+  * @brief List of possible states for the state machine. States can be added as needed for new
+  * functionality.
+  */
 typedef enum sm_states
 {
     STANDBY = 0,

@@ -98,7 +98,7 @@ static int __print_header()
     }
     else if (settings.printf_xbee && !settings.printf_xbee_velocities)
     {
-        printf("%s id_xb | x_xb | y_xb | z_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |", __next_colour());
+        printf("%s x_xb | y_xb | z_xb | qx_xb | qy_xb | qz_xb | qw_xb | sm_xb |  xd_xb |  yd_xb |  zd_xb |", __next_colour());
     }
     if (settings.printf_gps)
     {
@@ -214,16 +214,16 @@ static void* __printf_manager_func(__attribute__((unused)) void* ptr)
         }
         if (settings.printf_xbee && settings.printf_xbee_velocities)
         {
-            printf("%s %6.2d|%+6.2f|%+6.2f|%+6.2f|%+9.2f|%+9.2f|%+9.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
-                xbeeMsg_v3.id, xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, state_estimate.X_dot, state_estimate.Y_dot,
+            printf("%s%+6.2f|%+6.2f|%+6.2f|%+9.2f|%+9.2f|%+9.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |%+8.2f|%+8.2f|%+8.2f|", __next_colour(),
+                xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, state_estimate.X_dot, state_estimate.Y_dot,
                 state_estimate.Z_dot, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
-                xbeeMsg.sm_event);
+                xbeeMsg.sm_event, xbeeMsg_v3.x_d, xbeeMsg_v3.y_d, xbeeMsg_v3.z_d);
         }
         else if (settings.printf_xbee && !settings.printf_xbee_velocities)
         {
-            printf("%s %6.2d|%+6.2f|%+6.2f|%+6.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |", __next_colour(),
-                xbeeMsg_v3.id, xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
-                xbeeMsg.sm_event);
+            printf("%s%+6.2f|%+6.2f|%+6.2f|%+7.2f|%+7.2f|%+7.2f|%+7.2f|  %2X   |%+8.2f|%+8.2f|%+8.2f|", __next_colour(),
+                xbeeMsg.x, xbeeMsg.y, xbeeMsg.z, xbeeMsg.qx, xbeeMsg.qy, xbeeMsg.qz, xbeeMsg.qw,
+                xbeeMsg.sm_event, xbeeMsg_v3.x_d, xbeeMsg_v3.y_d, xbeeMsg_v3.z_d);
         }
         if (settings.printf_gps)
         {

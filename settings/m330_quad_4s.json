@@ -14,11 +14,11 @@
 	"mocap_dropout_timeout_ms": 300.0,
 	"dropout_z_throttle": -0.30,
 
-    "hover_throttle": -0.33,
-    "output_modifier": 1.0,
+	"hover_throttle": -0.33,
+	"output_modifier": 1.0,
 
 	"rm3100_time_between_meas_s": 0.005,
-	
+
 	"vl53l1x_time_between_meas_s": 0.030,
 	"vl53l1x_timing_budget_ms": 33,
 
@@ -48,30 +48,31 @@
 
 	"printf_arm": true,
 	"printf_altitude": false,
-	"printf_battery": true,
-	"printf_position": true,
+	"printf_battery": false,
+	"printf_position": false,
 	"printf_rpy": false,
 	"printf_sticks": false,
+	"printf_setpoint": false,
 	"printf_setpoint": false,
 	"printf_u": false,
 	"printf_motors": false,
 	"printf_mode": true,
 	"printf_xbee": true,
-	"printf_xbee_velocities": true,
-	"printf_tracking": true, 
-	"printf_gps": false, 
+	"printf_xbee_velocities": false,
+	"printf_tracking": true,
+	"printf_gps": false,
 	"printf_magnetom": false,
 	"printf_rm3100": false,
 	"printf_vl53l1x": false,
 
-    "enable_logging": true,
-    "log_only_while_armed": true,
+	"enable_logging": true,
+	"log_only_while_armed": true,
 	"log_sensors": true,
 	"log_state": true,
 	"log_xbee": true,
 	"log_gps": true,
-    "log_attitude_setpoint": true,
-    "log_position_setpoint": true,
+	"log_attitude_setpoint": true,
+	"log_position_setpoint": true,
 	"log_control_u": true,
 	"log_motor_signals": true,
 	"log_throttles": true,
@@ -79,8 +80,8 @@
 	"log_flight_mode": true,
 	"log_rm3100": false,
 	"log_benchmark": true,
-    "log_ntp": false,
-    "log_realsense_payload": false,
+	"log_ntp": false,
+	"log_realsense_payload": false,
 	"log_vl53l1x": false,
 
 	"dest_ip": "192.168.8.1",
@@ -93,55 +94,55 @@
 	"wp_folder": "/home/debian/waypoints/",
 	"wp_takeoff_filename": "takeoff_waypoints.cfg",
 	"wp_guided_filename": "guided_waypoints.cfg",
-    "wp_loiter_filename": "loiter_waypoints.cfg",
+	"wp_loiter_filename": "loiter_waypoints.cfg",
 	"wp_landing_filename": "landing_waypoints.cfg",
 
-    "xbee_serial_port": "/dev/ttyUSB0",
-    "xbee_packet_version": 3,
+	"xbee_serial_port": "/dev/ttyUSB0",
+	"xbee_packet_version": 3,
 
-    "delta_arm_bus": 1,
-    "delta_arm_enable": true,
+	"delta_arm_bus": 1,
+	"delta_arm_enable": true,
 
-    "realsense_payload_serial_port": "/dev/ttyS1",
+	"realsense_payload_serial_port": "/dev/ttyS1",
 
 	"gyro_lpf_timeConst_multiplier": 3.0,
-	
-    "roll_rate_controller_pd": {
+
+	"roll_rate_controller_pd": {
 		"TF_or_PID": "PD",
-		"kp":0.1,
-		"kd":0.01,
+		"kp": 0.1,
+		"kd": 0.01,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "roll_rate_controller_i": {
+	"roll_rate_controller_i": {
 		"TF_or_PID": "I",
-		"ki":0.02,
-        "imax": 0.05
+		"ki": 0.02,
+		"imax": 0.05
 	},
 
 
-    "pitch_rate_controller_pd": {
+	"pitch_rate_controller_pd": {
 		"TF_or_PID": "PD",
-		"kp":0.1,
-		"kd":0.01,
+		"kp": 0.1,
+		"kd": 0.01,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "pitch_rate_controller_i": {
+	"pitch_rate_controller_i": {
 		"TF_or_PID": "I",
-		"ki":0.02,
-        "imax": 0.05
+		"ki": 0.02,
+		"imax": 0.05
 	},
 
 
-    "yaw_rate_controller_pd": {
+	"yaw_rate_controller_pd": {
 		"TF_or_PID": "PD",
-		"kp":0.2,
-		"kd":0.01,
+		"kp": 0.2,
+		"kd": 0.01,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "yaw_rate_controller_i": {
+	"yaw_rate_controller_i": {
 		"TF_or_PID": "I",
-		"ki":0.02,
-        "imax": 0.05
+		"ki": 0.02,
+		"imax": 0.05
 	},
 
 
@@ -153,11 +154,11 @@
 	},
 	"roll_controller_i": {
 		"TF_or_PID": "I",
-		"ki":0.0,
-        "imax": 0.05
+		"ki": 0.0,
+		"imax": 0.05
 	},
 
-    
+
 	"pitch_controller": {
 		"TF_or_PID": "P",
 		"kp": 8.0
@@ -170,42 +171,42 @@
 	},
 
 
-    "altitude_rate_controller_pd": {
+	"altitude_rate_controller_pd": {
 		"TF_or_PID": "PD",
-		"kp":0.15,
-		"kd":0.03,
+		"kp": 0.15,
+		"kd": 0.03,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "altitude_rate_controller_i": {
+	"altitude_rate_controller_i": {
 		"TF_or_PID": "I",
-		"ki":0.05,
-        "imax": 0.1
+		"ki": 0.05,
+		"imax": 0.1
 	},
 
 
 	"altitude_controller_pd": {
 		"TF_or_PID": "PD",
-		"kp":5.0,
-        "kd":0.02,
+		"kp": 5.0,
+		"kd": 0.02,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "altitude_controller_i": {
+	"altitude_controller_i": {
 		"TF_or_PID": "I",
 		"ki": 0.15,
-        "imax": 0.1
+		"imax": 0.1
 	},
 
 
 	"horiz_vel_ctrl_pd": {
 		"TF_or_PID": "PD",
-		"kp":2,
-		"kd":0.1,
+		"kp": 2,
+		"kd": 0.1,
 		"crossover_freq_rad_per_sec": 62.83
 	},
-    "horiz_vel_ctrl_i": {
+	"horiz_vel_ctrl_i": {
 		"TF_or_PID": "I",
-		"ki":0.02,
-		"imax":0.05
+		"ki": 0.02,
+		"imax": 0.05
 	},
 
 

@@ -132,6 +132,11 @@ static void __imu_isr(void)
     XBEE_getData();
     if (settings.log_benchmark) benchmark_timers.tXBEE = rc_nanos_since_epoch();
 
+    if (settings.delta_arm_enable)
+    {
+        delta_send_data();
+    }
+
     // Get Realsense Payload Data
     switch (REALSENSE_getData())
     {
@@ -313,6 +318,7 @@ int main(int argc, char* argv[ ])
 
 /*
     // make sure IMU is calibrated
+    /*
     if (!rc_mpu_is_gyro_calibrated())
     {
         FAIL("ERROR: must calibrate gyroscope with rc_calibrate_gyro first\n")
@@ -329,7 +335,8 @@ int main(int argc, char* argv[ ])
     {
         FAIL("ERROR: must calibrate DSM with rc_calibrate_dsm first\n")
     }
-*/
+    */
+
     // turn cpu freq to max for most consistent performance and lowest
     // latency servicing the IMU's interrupt service routine
     // this also serves as an initial check for root access which is needed
@@ -417,11 +424,20 @@ int main(int argc, char* argv[ ])
         FAIL("ERROR: failed to init state_estimator")
     }
 
-    // set uo delta arm passthrough
-    printf("initializing delta arm on port: /dev/ttyO%d.\n", settings.delta_arm_bus);
-    if (delta_init(settings.delta_arm_bus, settings.xbee_serial_port, settings.delta_arm_enable) == -1)
+    // set up XBEE serial link
+    printf("initializing xbee serial link:%s.\n", settings.xbee_serial_port);
+    if (XBEE_init(settings.xbee_serial_port) < 0)
     {
-        FAIL("ERROR: failed to initialize delta arm communication")
+        FAIL("ERROR: failed to init xbee serial link")
+    }
+
+    printf("initlializing delta serial link");
+    if (settings.delta_arm_enable)
+    {
+        if (delta_arm_init() < 0)
+        {
+            FAIL("ERROR: failed to initialize delta arm communication")
+        }
     }
 
     // set up XBEE serial link
