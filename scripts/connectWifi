@@ -8,7 +8,7 @@ main() {
     PASSWORD=$2
 
 	# Define Destination (DEST)
-	DEST='debian@192.168.7.2'
+	DEST='debian@192.168.8.1'
     PASS='temppwd'
 
     WIFI=wifi_508cb15e8a3a_656475726f616d_managed_ieee8021x
