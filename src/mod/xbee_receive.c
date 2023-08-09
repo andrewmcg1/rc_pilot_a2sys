@@ -17,6 +17,7 @@
 #include <stdlib.h>  //one of these two is for memcpy
 #include <string.h>
 #include <unistd.h>  // read / write
+#include <fcntl.h>   // open
 
  // Below for PRId64
 #include <inttypes.h>
@@ -53,10 +54,19 @@ uint64_t lastime = 0;
 uint64_t thistime = 0;
 float xbee_dt; //Defined as extern
 
-int XBEE_init(const char* xbee_port)
+int XBEE_init(const char* xbee_port, int temp_enabled)
 {
     int baudRate = 57600;
-    xbee_portID = serial_open(xbee_port, baudRate, 0);  // Nonblocking = 0, BLOCKING = 1
+
+    if(temp_enabled)
+    {
+        xbee_portID = open("xbee_temp", O_NONBLOCK);  // Nonblocking = 0, BLOCKING = 1
+    }
+    else
+    {
+        xbee_portID = serial_open(xbee_port, baudRate, 0);  // Nonblocking = 0, BLOCKING = 1
+    }
+    
     if (xbee_portID == -1)
     {
         printf("Failed to open Serial Port\n");
@@ -153,7 +163,6 @@ int XBEE_init(const char* xbee_port)
         break;
     }
 
-
     lastime = rc_nanos_since_epoch();
     return 0;
 }
@@ -236,6 +245,8 @@ int XBEE_getData()
 
                 __diff_function(&x_position_track, &y_position_track, &z_position_track);
 
+                //printf("ID: %1d | State: %d | X: %.4f | Y: %.4f | Z: %.4f\n", xbeeMsg_v3.id, xbeeMsg_v3.id, xbeeMsg.x, xbeeMsg.y, xbeeMsg.z);
+
                 return 0;
             }
             else
@@ -247,6 +258,7 @@ int XBEE_getData()
                 return -1;
             }
         }
+
     }
 
     // Check to see if mocap is still valid (separate from OPEN_LOOP_DESCENT) - just for trackingValid value

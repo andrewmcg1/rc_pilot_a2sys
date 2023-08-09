@@ -316,6 +316,7 @@ int main(int argc, char* argv[ ])
         return -1;
     }
 
+/*
     // make sure IMU is calibrated
     /*
     if (!rc_mpu_is_gyro_calibrated())
@@ -430,12 +431,20 @@ int main(int argc, char* argv[ ])
         FAIL("ERROR: failed to init xbee serial link")
     }
 
+    printf("initlializing delta serial link");
     if (settings.delta_arm_enable)
     {
         if (delta_arm_init() < 0)
         {
             FAIL("ERROR: failed to initialize delta arm communication")
         }
+    }
+
+    // set up XBEE serial link
+    printf("initializing xbee serial link:%s.\n", settings.xbee_serial_port);
+    if (XBEE_init(settings.xbee_serial_port, settings.delta_arm_enable) < 0)
+    {
+        FAIL("ERROR: failed to init xbee serial link")
     }
 
     // set up Realsense Payload serial link
@@ -673,6 +682,7 @@ int main(int argc, char* argv[ ])
     printf_cleanup();
     log_manager_cleanup();
     path_cleanup();
+    delta_cleanup();
     VL53L1X_StopRanging(&vl53l1_device_extern);
 
     // turn off red LED and blink green to say shut down was safe

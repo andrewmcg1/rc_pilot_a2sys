@@ -53,6 +53,7 @@
 	"printf_rpy": false,
 	"printf_sticks": false,
 	"printf_setpoint": false,
+	"printf_setpoint": false,
 	"printf_u": false,
 	"printf_motors": false,
 	"printf_mode": true,
