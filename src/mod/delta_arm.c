@@ -7,32 +7,35 @@
 
 #include <delta_arm.h>
 #include <xbee_receive.h>
+#include <settings.h>
 
 #include <rc/uart.h>
 
-#define DELTA_ARM_BUS 1
-#define BAUDRATE 57600
-#define TIMEOUT_S 0.5
+delta_arm_t delta_arm;
 
-int delta_init()
+int delta_arm_init(void)
 {
-    return rc_uart_init(DELTA_ARM_BUS, BAUDRATE, TIMEOUT_S, 0, 1, 0);
+    int init = rc_uart_init(settings.delta_arm_bus, DELTA_ARM_BAUDRATE, DELTA_ARM_TIMEOUT_S, 0, 1, 0);
+    rc_uart_flush(settings.delta_arm_bus);
+    return init;
 }
 
-void delta_send_data()
+void delta_send_data(void)
 {
-    uint8_t buffer[48];
-    uint8_t other_buffer[46];
-    buffer[0] = 0x7E;
-    buffer[1] = 0x7F;
-
-    memcpy(other_buffer, &xbeeMsg_v3, 46);
-
-    for (int i = 0; i < 46; i++)
+    uint8_t buffer[DELTA_ARM_PACKET_SIZE];
+    buffer[0] = DELTA_ARM_START_BYTE_1;
+    buffer[1] = DELTA_ARM_START_BYTE_2;
+    memcpy(buffer + 2, &delta_arm, DELTA_ARM_DATA_SIZE);
+    uint16_t checksum1 = 0;
+    uint16_t checksum2 = 0;
+    for (unsigned int i = 0; i < DELTA_ARM_DATA_SIZE; i++)
     {
-        buffer[i + 2] = other_buffer[i];
+        checksum1 += buffer[i + 2];
+        checksum2 += checksum1;
     }
+    checksum2++;
+    buffer[DELTA_ARM_PACKET_SIZE - 2] = checksum1;
+    buffer[DELTA_ARM_PACKET_SIZE - 1] = checksum2;
 
-    rc_uart_flush(DELTA_ARM_BUS);
-    rc_uart_write(DELTA_ARM_BUS, buffer, 48);
+    rc_uart_write(settings.delta_arm_bus, buffer, DELTA_ARM_PACKET_SIZE);
 }

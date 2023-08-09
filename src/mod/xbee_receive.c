@@ -216,6 +216,14 @@ int XBEE_getData()
             memcpy(&checksum_received, &dataPacket[opti_data_length], sizeof(checksum_received));
             // printf("Checksum calculated: %u; Checksum Recieved: %u \n", checksum_calculated, checksum_received);
 
+            /*
+            for (int i = 0; i < sizeof(serialPacket); i++)
+            {
+                printf("%02x ", serialPacket[i]);
+            }
+            printf("\n");
+            */
+
             if (checksum_received == checksum_calculated)
             {
                 __copy_xbee_msg(dataPacket);
@@ -232,10 +240,10 @@ int XBEE_getData()
             }
             else
             {
-                // printf("Wrong checksum!");
-                // printf("Received %04x ", checksum_received);
+                printf("Wrong checksum!");
+                printf("Received %04x ", checksum_received);
                 // printf("Function %04x ", checksum_with_function);
-                // printf("Calculated %04x\n", checksum_calculated);
+                printf("Calculated %04x\n", checksum_calculated);
                 return -1;
             }
         }
@@ -272,7 +280,8 @@ void __copy_xbee_msg(unsigned char* dataPacket)
 
     case 3:
         // printf("Copying XBee Message V3!\n");
-        memcpy(&xbeeMsg_v3, dataPacket, opti_data_length);
+        memcpy(&xbeeMsg_v3, dataPacket, opti_data_length);;
+        xbeeMsg.sm_event = xbeeMsg_v3.state;
         xbeeMsg.x = xbeeMsg_v3.x;
         xbeeMsg.y = xbeeMsg_v3.y;
         xbeeMsg.z = xbeeMsg_v3.z;
@@ -281,13 +290,20 @@ void __copy_xbee_msg(unsigned char* dataPacket)
         xbeeMsg.qz = xbeeMsg_v3.qz;
         xbeeMsg.qw = xbeeMsg_v3.qw;
         xbeeMsg.trackingValid = 1;
+
+        // Update delta arm values
+        if (settings.delta_arm_enable)
+        {
+            delta_arm.claw = xbeeMsg_v3.claw;
+            delta_arm.state = 4;
+            delta_arm.x = xbeeMsg_v3.x_d;
+            delta_arm.y = xbeeMsg_v3.y_d;
+            delta_arm.z = xbeeMsg_v3.z_d;
+        }
         break;
     default:
         break;
     }
-
-    delta_send_data();
-
     return;
 }
 

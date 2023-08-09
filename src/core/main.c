@@ -132,6 +132,11 @@ static void __imu_isr(void)
     XBEE_getData();
     if (settings.log_benchmark) benchmark_timers.tXBEE = rc_nanos_since_epoch();
 
+    if (settings.delta_arm_enable)
+    {
+        delta_send_data();
+    }
+
     // Get Realsense Payload Data
     switch (REALSENSE_getData())
     {
@@ -312,6 +317,7 @@ int main(int argc, char* argv[ ])
     }
 
     // make sure IMU is calibrated
+    /*
     if (!rc_mpu_is_gyro_calibrated())
     {
         FAIL("ERROR: must calibrate gyroscope with rc_calibrate_gyro first\n")
@@ -328,6 +334,7 @@ int main(int argc, char* argv[ ])
     {
         FAIL("ERROR: must calibrate DSM with rc_calibrate_dsm first\n")
     }
+    */
 
     // turn cpu freq to max for most consistent performance and lowest
     // latency servicing the IMU's interrupt service routine
@@ -423,9 +430,12 @@ int main(int argc, char* argv[ ])
         FAIL("ERROR: failed to init xbee serial link")
     }
 
-    if (delta_init() == -1)
+    if (settings.delta_arm_enable)
     {
-        FAIL("ERROR: failed to initialize delta arm communication")
+        if (delta_arm_init() < 0)
+        {
+            FAIL("ERROR: failed to initialize delta arm communication")
+        }
     }
 
     // set up Realsense Payload serial link

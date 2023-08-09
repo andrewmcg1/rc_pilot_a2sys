@@ -19,10 +19,10 @@
 #include <rc_pilot_defs.h>
 #include <thrust_map.h>
 
-/**
- * Configuration settings read from the json settings file and passed to most
- * threads as they initialize.
- */
+ /**
+  * Configuration settings read from the json settings file and passed to most
+  * threads as they initialize.
+  */
 typedef struct settings_t
 {
     /** @name File details */
@@ -169,7 +169,7 @@ typedef struct settings_t
     rc_filter_t horiz_vel_ctrl_i;
     rc_filter_t horiz_pos_ctrl_pd;
     rc_filter_t horiz_pos_ctrl_i;
-    
+
     ///@}
 
     /** @name dsm connection */
@@ -199,6 +199,12 @@ typedef struct settings_t
     ///@{
     char xbee_serial_port[50];
     int xbee_packet_version;
+    ///@}
+
+    /** @name serial port that the delta arm is connected too*/
+    ///@{
+    int delta_arm_bus;
+    int delta_arm_enable;
     ///@}
 
     /** @name Realsense Payload Settings */

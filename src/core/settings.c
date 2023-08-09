@@ -16,7 +16,7 @@
 #include <rc_pilot_defs.h>
 #include <settings.h>
 
-// json object respresentation of the whole settings file
+ // json object respresentation of the whole settings file
 static json_object* jobj;
 
 // primary settings struct declared as extern in header is defined ONCE here
@@ -303,25 +303,31 @@ static int __parse_flight_mode(json_object* jobj_str, flight_mode_t* mode)
     {
         *mode = AUTONOMOUS;
     }
-    else if (strcmp(tmp_str, "OPEN_LOOP_DESCENT") == 0) {
-		*mode = OPEN_LOOP_DESCENT;
+    else if (strcmp(tmp_str, "OPEN_LOOP_DESCENT") == 0)
+    {
+        *mode = OPEN_LOOP_DESCENT;
         printf("OPEN_LOOP_DESCENT selected with throttle %0.3lf\n", settings.dropout_z_throttle);
-	}
-    else if (strcmp(tmp_str, "LOITER") == 0) {
-		*mode = LOITER;
-	}
-    else if (strcmp(tmp_str, "LOITER_RSP") == 0) {
-		*mode = LOITER_RSP;
-	}
-    else if (strcmp(tmp_str, "ACRO") == 0) {
-		*mode = ACRO;
-	}
-    else if (strcmp(tmp_str, "TEST_BENCH_DIRECT_Z_ACC") == 0) {
-		*mode = TEST_BENCH_DIRECT_Z_ACC;
-	}
-    else if (strcmp(tmp_str, "TEST_BENCH_DIRECT_Z_VEL") == 0) {
-		*mode = TEST_BENCH_DIRECT_Z_VEL;
-	}
+    }
+    else if (strcmp(tmp_str, "LOITER") == 0)
+    {
+        *mode = LOITER;
+    }
+    else if (strcmp(tmp_str, "LOITER_RSP") == 0)
+    {
+        *mode = LOITER_RSP;
+    }
+    else if (strcmp(tmp_str, "ACRO") == 0)
+    {
+        *mode = ACRO;
+    }
+    else if (strcmp(tmp_str, "TEST_BENCH_DIRECT_Z_ACC") == 0)
+    {
+        *mode = TEST_BENCH_DIRECT_Z_ACC;
+    }
+    else if (strcmp(tmp_str, "TEST_BENCH_DIRECT_Z_VEL") == 0)
+    {
+        *mode = TEST_BENCH_DIRECT_Z_VEL;
+    }
     else
     {
         fprintf(stderr, "ERROR: invalid flight mode\n");
@@ -546,7 +552,7 @@ static int __parse_controller(json_object* jobj_ctl, rc_filter_t* filter)
         tmp_kd = 0.0;
 
         // Not used in rc_filter_pid for pure P, but (1/tmp_flt) must be >2*DT
-        tmp_flt = 62.83;  
+        tmp_flt = 62.83;
 
         if (rc_filter_pid(filter, tmp_kp, tmp_ki, tmp_kd, 1.0 / tmp_flt, DT))
         {
@@ -598,14 +604,14 @@ static int __parse_controller(json_object* jobj_ctl, rc_filter_t* filter)
             return -1;
         }
         tmp_ki = json_object_get_double(tmp);
-       
+
         if (json_object_object_get_ex(jobj_ctl, "imax", &tmp) == 0)
         {
             fprintf(stderr, "ERROR: can't find imax in settings file\n");
             return -1;
         }
         tmp_imax = json_object_get_double(tmp);
-       
+
         if (rc_filter_integrator(filter, DT))
         {
             fprintf(stderr, "ERROR: failed to alloc i filter in __parse_controller()");
@@ -664,11 +670,11 @@ int settings_load_from_file(const char* path)
 
     PARSE_STRING(name)
 #ifdef DEBUG
-    fprintf(stderr, "name: %s\n", settings.name);
+        fprintf(stderr, "name: %s\n", settings.name);
 #endif
     PARSE_BOOL(warnings_en)
 #ifdef DEBUG
-    fprintf(stderr, "warnings: %d\n", settings.warnings_en);
+        fprintf(stderr, "warnings: %d\n", settings.warnings_en);
 #endif
 
     // PHYSICAL PARAMETERS
@@ -683,19 +689,19 @@ int settings_load_from_file(const char* path)
 #endif
     PARSE_DOUBLE_MIN_MAX(v_nominal, 7.0, 18.0)
 #ifdef DEBUG
-    fprintf(stderr, "v_nominal: %f\n", settings.v_nominal);
+        fprintf(stderr, "v_nominal: %f\n", settings.v_nominal);
 #endif
     PARSE_BOOL(enable_mpu_magnetometer)
 
-    // EMERGENCY LANDING SETTINGS
-    PARSE_BOOL(enable_mocap_dropout_emergency_land)
-    PARSE_DOUBLE_MIN_MAX(mocap_dropout_timeout_ms, 0, 10000)
-    PARSE_DOUBLE_MIN_MAX(dropout_z_throttle, -1, 0)
-    if(settings.enable_mocap_dropout_emergency_land)
-    {
-        printf("Mocap dropout emergency landing ENABLED.\tDropout timeout: %0.1lfms.\tThrottle: %0.3lf\n", 
+        // EMERGENCY LANDING SETTINGS
+        PARSE_BOOL(enable_mocap_dropout_emergency_land)
+        PARSE_DOUBLE_MIN_MAX(mocap_dropout_timeout_ms, 0, 10000)
+        PARSE_DOUBLE_MIN_MAX(dropout_z_throttle, -1, 0)
+        if (settings.enable_mocap_dropout_emergency_land)
+        {
+            printf("Mocap dropout emergency landing ENABLED.\tDropout timeout: %0.1lfms.\tThrottle: %0.3lf\n",
                 settings.mocap_dropout_timeout_ms, settings.dropout_z_throttle);
-    }
+        }
 #ifdef DEBUG
     fprintf(stderr, "enable_mocap_dropout_emergency_land: %d\n", settings.enable_mocap_dropout_emergency_land);
     fprintf(stderr, "mocap_dropout_timeout_ms: %lf\n", settings.mocap_dropout_timeout_ms);
@@ -703,30 +709,30 @@ int settings_load_from_file(const char* path)
 
     // Hover Throttle
     PARSE_DOUBLE_MIN_MAX(hover_throttle, -1, 0)
-    // Output Modifier
-    PARSE_DOUBLE_MIN_MAX(output_modifier, 0, 1)
+        // Output Modifier
+        PARSE_DOUBLE_MIN_MAX(output_modifier, 0, 1)
 
-    // Amount of time (in seconds) between each RM3100 measurements
-    PARSE_DOUBLE_MIN_MAX(rm3100_time_between_meas_s, 0, 1000)
+        // Amount of time (in seconds) between each RM3100 measurements
+        PARSE_DOUBLE_MIN_MAX(rm3100_time_between_meas_s, 0, 1000)
 
-    // Amount of time (in seconds) between each VL53L1X measurements
-    PARSE_DOUBLE_MIN_MAX(vl53l1x_time_between_meas_s, 0, 1000)
-    PARSE_INT_MIN_MAX(vl53l1x_timing_budget_ms, 15, 500)
-    
+        // Amount of time (in seconds) between each VL53L1X measurements
+        PARSE_DOUBLE_MIN_MAX(vl53l1x_time_between_meas_s, 0, 1000)
+        PARSE_INT_MIN_MAX(vl53l1x_timing_budget_ms, 15, 500)
 
-    // Whether and how to calibrate RM3100 magnetometer with prescribed calibration parameters
-    PARSE_BOOL(apply_rm3100_calibration)
-    PARSE_STRING(rm3100_calibration_filename)
-    PARSE_INT(rm3100_CCR_value)
-    PARSE_INT(rm3100_i2c_addr)
 
-    // FLIGHT MODES
-    PARSE_INT_MIN_MAX(num_dsm_modes, 1, 3)
-    if (json_object_object_get_ex(jobj, "flight_mode_1", &tmp) == 0)
-    {
-        fprintf(stderr, "ERROR: can't find flight_mode_1 in settings file\n");
-        return -1;
-    }
+        // Whether and how to calibrate RM3100 magnetometer with prescribed calibration parameters
+        PARSE_BOOL(apply_rm3100_calibration)
+        PARSE_STRING(rm3100_calibration_filename)
+        PARSE_INT(rm3100_CCR_value)
+        PARSE_INT(rm3100_i2c_addr)
+
+        // FLIGHT MODES
+        PARSE_INT_MIN_MAX(num_dsm_modes, 1, 3)
+        if (json_object_object_get_ex(jobj, "flight_mode_1", &tmp) == 0)
+        {
+            fprintf(stderr, "ERROR: can't find flight_mode_1 in settings file\n");
+            return -1;
+        }
     if (__parse_flight_mode(tmp, &settings.flight_mode_1)) return -1;
 #ifdef DEBUG
     fprintf(stderr, "flight_mode_1: %d\n", settings.flight_mode_1);
@@ -753,108 +759,112 @@ int settings_load_from_file(const char* path)
 
     // DSM RADIO CONFIG
     PARSE_INT_MIN_MAX(dsm_thr_ch, 1, 9)
-    PARSE_POLARITY(dsm_thr_pol)
-    PARSE_INT_MIN_MAX(dsm_roll_ch, 1, 9)
-    PARSE_POLARITY(dsm_roll_pol)
-    PARSE_INT_MIN_MAX(dsm_pitch_ch, 1, 9)
-    PARSE_POLARITY(dsm_pitch_pol)
-    PARSE_INT_MIN_MAX(dsm_yaw_ch, 1, 9)
-    PARSE_POLARITY(dsm_yaw_pol)
-    PARSE_INT_MIN_MAX(dsm_mode_ch, 1, 9)
-    PARSE_POLARITY(dsm_mode_pol)
-    if (__parse_kill_mode() == -1) return -1;
+        PARSE_POLARITY(dsm_thr_pol)
+        PARSE_INT_MIN_MAX(dsm_roll_ch, 1, 9)
+        PARSE_POLARITY(dsm_roll_pol)
+        PARSE_INT_MIN_MAX(dsm_pitch_ch, 1, 9)
+        PARSE_POLARITY(dsm_pitch_pol)
+        PARSE_INT_MIN_MAX(dsm_yaw_ch, 1, 9)
+        PARSE_POLARITY(dsm_yaw_pol)
+        PARSE_INT_MIN_MAX(dsm_mode_ch, 1, 9)
+        PARSE_POLARITY(dsm_mode_pol)
+        if (__parse_kill_mode() == -1) return -1;
 #ifdef DEBUG
     fprintf(stderr, "kill_mode: %d\n", settings.dsm_kill_mode);
 #endif
     PARSE_INT_MIN_MAX(dsm_kill_ch, 1, 9)
-    PARSE_POLARITY(dsm_kill_pol)
+        PARSE_POLARITY(dsm_kill_pol)
 
-    // PRINTF OPTIONS
-    PARSE_BOOL(printf_arm)
-    PARSE_BOOL(printf_altitude)
-    PARSE_BOOL(printf_battery)
-    PARSE_BOOL(printf_rpy)
-    PARSE_BOOL(printf_sticks)
-    PARSE_BOOL(printf_setpoint)
-    PARSE_BOOL(printf_u)
-    PARSE_BOOL(printf_motors)
-    PARSE_BOOL(printf_mode)
-    PARSE_BOOL(printf_xbee)
-    PARSE_BOOL(printf_xbee_velocities)
-    PARSE_BOOL(printf_tracking)
-    PARSE_BOOL(printf_gps)
-    PARSE_BOOL(printf_magnetom)
-    PARSE_BOOL(printf_rm3100)
-    PARSE_BOOL(printf_vl53l1x)
-    
+        // PRINTF OPTIONS
+        PARSE_BOOL(printf_arm)
+        PARSE_BOOL(printf_altitude)
+        PARSE_BOOL(printf_battery)
+        PARSE_BOOL(printf_rpy)
+        PARSE_BOOL(printf_sticks)
+        PARSE_BOOL(printf_setpoint)
+        PARSE_BOOL(printf_u)
+        PARSE_BOOL(printf_motors)
+        PARSE_BOOL(printf_mode)
+        PARSE_BOOL(printf_xbee)
+        PARSE_BOOL(printf_xbee_velocities)
+        PARSE_BOOL(printf_tracking)
+        PARSE_BOOL(printf_gps)
+        PARSE_BOOL(printf_magnetom)
+        PARSE_BOOL(printf_rm3100)
+        PARSE_BOOL(printf_vl53l1x)
 
-    // LOGGING
-    PARSE_BOOL(enable_logging)
-    PARSE_BOOL(log_only_while_armed)
-    PARSE_BOOL(log_sensors)
-    PARSE_BOOL(log_state)
-    PARSE_BOOL(log_xbee)
-    PARSE_BOOL(log_gps)
-    PARSE_BOOL(log_attitude_setpoint)
-    PARSE_BOOL(log_position_setpoint)
-    PARSE_BOOL(log_control_u)
-    PARSE_BOOL(log_motor_signals)
-    PARSE_BOOL(log_throttles)
-    PARSE_BOOL(log_dsm)
-    PARSE_BOOL(log_flight_mode)
-    PARSE_BOOL(log_rm3100)
-    PARSE_BOOL(log_benchmark)
-    PARSE_BOOL(log_ntp)
-    PARSE_BOOL(log_realsense_payload)
-    PARSE_BOOL(log_vl53l1x)
 
-    // MAVLINK
-    PARSE_STRING(dest_ip)
-    PARSE_INT(my_sys_id)
-    PARSE_INT(mav_port)
+        // LOGGING
+        PARSE_BOOL(enable_logging)
+        PARSE_BOOL(log_only_while_armed)
+        PARSE_BOOL(log_sensors)
+        PARSE_BOOL(log_state)
+        PARSE_BOOL(log_xbee)
+        PARSE_BOOL(log_gps)
+        PARSE_BOOL(log_attitude_setpoint)
+        PARSE_BOOL(log_position_setpoint)
+        PARSE_BOOL(log_control_u)
+        PARSE_BOOL(log_motor_signals)
+        PARSE_BOOL(log_throttles)
+        PARSE_BOOL(log_dsm)
+        PARSE_BOOL(log_flight_mode)
+        PARSE_BOOL(log_rm3100)
+        PARSE_BOOL(log_benchmark)
+        PARSE_BOOL(log_ntp)
+        PARSE_BOOL(log_realsense_payload)
+        PARSE_BOOL(log_vl53l1x)
 
-    // DSM CONNECTION TIMER
-    PARSE_INT(dsm_timeout_ms)
+        // MAVLINK
+        PARSE_STRING(dest_ip)
+        PARSE_INT(my_sys_id)
+        PARSE_INT(mav_port)
 
-    // WAYPOINT FILES
-    PARSE_BOOL(enable_wp_linear_interpolation)
-    PARSE_STRING(wp_folder)
-    PARSE_STRING(wp_takeoff_filename)
-    PARSE_STRING(wp_guided_filename)
-    PARSE_STRING(wp_loiter_filename)
-    PARSE_STRING(wp_landing_filename)
+        // DSM CONNECTION TIMER
+        PARSE_INT(dsm_timeout_ms)
 
-    // XBEE SERIAL PORT
-    PARSE_STRING(xbee_serial_port)
-    PARSE_INT(xbee_packet_version)
+        // WAYPOINT FILES
+        PARSE_BOOL(enable_wp_linear_interpolation)
+        PARSE_STRING(wp_folder)
+        PARSE_STRING(wp_takeoff_filename)
+        PARSE_STRING(wp_guided_filename)
+        PARSE_STRING(wp_loiter_filename)
+        PARSE_STRING(wp_landing_filename)
 
-    // REALSENSE PAYLOAD SERIAL PORT
-    PARSE_STRING(realsense_payload_serial_port)
+        // XBEE SERIAL PORT
+        PARSE_STRING(xbee_serial_port)
+        PARSE_INT(xbee_packet_version)
 
-    // GYROSCOPE LOW PASS FILTER TIME CONSTANT MULTIPLIER
-    PARSE_DOUBLE_MIN_MAX(gyro_lpf_timeConst_multiplier, 0, 1000)
+        // DELTA ARM SERIAL PORT
+        PARSE_INT(delta_arm_bus)
+        PARSE_BOOL(delta_arm_enable)
 
-    // FEEDBACK CONTROLLERS
-    PARSE_CONTROLLER(roll_rate_controller_pd)
-    PARSE_CONTROLLER(roll_rate_controller_i)
-    PARSE_CONTROLLER(pitch_rate_controller_pd)
-    PARSE_CONTROLLER(pitch_rate_controller_i)
-    PARSE_CONTROLLER(yaw_rate_controller_pd)
-    PARSE_CONTROLLER(yaw_rate_controller_i)
-    PARSE_CONTROLLER(roll_controller_pd)
-    PARSE_CONTROLLER(roll_controller_i)
-    PARSE_CONTROLLER(pitch_controller)
-    PARSE_CONTROLLER(yaw_controller)
-    PARSE_CONTROLLER(altitude_rate_controller_pd)
-    PARSE_CONTROLLER(altitude_rate_controller_i)
-    PARSE_CONTROLLER(altitude_controller_pd)
-    PARSE_CONTROLLER(altitude_controller_i)
-    PARSE_CONTROLLER(horiz_vel_ctrl_pd)
-    PARSE_CONTROLLER(horiz_vel_ctrl_i)
-    PARSE_CONTROLLER(horiz_pos_ctrl_pd)
-    PARSE_CONTROLLER(horiz_pos_ctrl_i)
+        // REALSENSE PAYLOAD SERIAL PORT
+        PARSE_STRING(realsense_payload_serial_port)
 
-    json_object_put(jobj);  // free memory
+        // GYROSCOPE LOW PASS FILTER TIME CONSTANT MULTIPLIER
+        PARSE_DOUBLE_MIN_MAX(gyro_lpf_timeConst_multiplier, 0, 1000)
+
+        // FEEDBACK CONTROLLERS
+        PARSE_CONTROLLER(roll_rate_controller_pd)
+        PARSE_CONTROLLER(roll_rate_controller_i)
+        PARSE_CONTROLLER(pitch_rate_controller_pd)
+        PARSE_CONTROLLER(pitch_rate_controller_i)
+        PARSE_CONTROLLER(yaw_rate_controller_pd)
+        PARSE_CONTROLLER(yaw_rate_controller_i)
+        PARSE_CONTROLLER(roll_controller_pd)
+        PARSE_CONTROLLER(roll_controller_i)
+        PARSE_CONTROLLER(pitch_controller)
+        PARSE_CONTROLLER(yaw_controller)
+        PARSE_CONTROLLER(altitude_rate_controller_pd)
+        PARSE_CONTROLLER(altitude_rate_controller_i)
+        PARSE_CONTROLLER(altitude_controller_pd)
+        PARSE_CONTROLLER(altitude_controller_i)
+        PARSE_CONTROLLER(horiz_vel_ctrl_pd)
+        PARSE_CONTROLLER(horiz_vel_ctrl_i)
+        PARSE_CONTROLLER(horiz_pos_ctrl_pd)
+        PARSE_CONTROLLER(horiz_pos_ctrl_i)
+
+        json_object_put(jobj);  // free memory
     was_load_successful = 1;
     return 0;
 }

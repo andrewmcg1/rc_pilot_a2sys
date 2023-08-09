@@ -63,7 +63,8 @@ typedef struct __attribute__((packed)) xbee_packet_v3_t
     float qz;              ///< qz of quaternion
     float qw;              ///< qw of quaternion
     int8_t trackingValid;  // (bool) of whether or not tracking was valid (0 or 1)
-    int16_t state;          ///< state
+    int8_t state;          ///< state
+    int8_t claw;           ///< claw
     float x_d;             ///< Desired X Position
     float y_d;             ///< Desired Y Position
     float z_d;             ///< Desired Z Position
